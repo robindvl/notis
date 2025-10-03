@@ -1,0 +1,140 @@
+openapi: 3.0.3
+info:
+  title: microservises/content
+  description: "API by microservises/content"
+  version: 0.0.1
+
+tags:
+  - name: spaces
+    description: Рабочие пространства
+  - name: blocks
+    description: Контент для заметок, секции, страницы, абзацы и т.п.
+
+paths:
+  /spaces:
+    get:
+      tags:
+        - spaces
+      summary: Получить список рабочих пространств
+      description: Получить список рабочих пространств
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Space'
+
+  /blocks:
+    get:
+      tags:
+        - blocks
+      summary: Получить список блоков контента
+      description: Получить список блоков контента
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockList'
+    post:
+      tags:
+        - blocks
+      summary: Создать страницу
+      description: Создать страницу
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockCreate'
+      responses:
+        '201':
+          description: Успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Block'
+
+  /blocks/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: Уникальный идентификатор блока
+    post:
+      tags:
+        - blocks
+      summary: Отправить на сохранение изменения контента
+      description: Отправить на сохранение изменения контента
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockUpdate'
+      responses:
+        '200':
+          description: Успешно обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Block'
+
+components:
+  schemas:
+    Space:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        owner_user_id:
+          type: integer
+
+    BlockList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Block'
+
+    Block:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - section
+            - page
+            - paragraph
+        parent_id:
+          type: integer
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Block'
+
+    BlockCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        parent_id:
+          type: integer
+        content:
+          type: string
+
+    BlockUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        content:
+          type: string
