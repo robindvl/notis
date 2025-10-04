@@ -24,6 +24,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Space'
+    post:
+      tags:
+        - spaces
+      summary: Создать рабочее пространство
+      description: Создать рабочее пространство
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpaceCreate'
+      responses:
+        '201':
+          description: Успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Space'
+
+  /spaces/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: Уникальный идентификатор блока
+    post:
+      tags:
+        - spaces
+      summary: Сохранить изменения рабочего пространства
+      description: Сохранить изменения рабочего пространства
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpaceUpdate'
+      responses:
+        '200':
+          description: Успешно обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Block'
 
   /blocks:
     get:
@@ -94,6 +137,20 @@ components:
         owner_user_id:
           type: integer
 
+    SpaceCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        owner_user_id:
+          type: integer
+
+    SpaceUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+
     BlockList:
       type: array
       items:
@@ -114,6 +171,8 @@ components:
             - paragraph
         parent_id:
           type: integer
+        body:
+          type: string
         blocks:
           type: array
           items:
@@ -126,15 +185,15 @@ components:
           type: string
         type:
           type: string
+        body:
+          type: string
         parent_id:
           type: integer
-        content:
-          type: string
 
     BlockUpdate:
       type: object
       properties:
         name:
           type: string
-        content:
+        body:
           type: string
