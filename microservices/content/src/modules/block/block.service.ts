@@ -9,17 +9,17 @@ import { BlockRepository } from './repositories/block.abstract';
 export class BlocksService implements BlocksApi {
   constructor(private readonly repository: BlockRepository) {}
 
-  blocksGet(): Array<Block> | Promise<Array<Block>> | Observable<Array<Block>> {
+  getBlocks(): Array<Block> | Promise<Array<Block>> | Observable<Array<Block>> {
     return this.repository.find();
   }
 
-  blocksPost(
+  createBlock(
     blockCreate: BlockCreate,
   ): Block | Promise<Block> | Observable<Block> {
     return this.repository.create(blockCreate);
   }
 
-  blocksIdPost(
+  updateBlock(
     id: number,
     blockUpdate: BlockUpdate,
   ): Block | Promise<Block> | Observable<Block> {

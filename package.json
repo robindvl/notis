@@ -2,6 +2,7 @@
   "name": "my-turborepo",
   "private": true,
   "scripts": {
+    "openapi:generate": "turbo run openapi:generate --filter=content",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",

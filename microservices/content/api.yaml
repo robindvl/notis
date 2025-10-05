@@ -16,6 +16,7 @@ paths:
       tags:
         - spaces
       summary: Получить список рабочих пространств
+      operationId: getSpaces
       description: Получить список рабочих пространств
       responses:
         '200':
@@ -23,11 +24,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Space'
+                $ref: '#/components/schemas/SpaceList'
     post:
       tags:
         - spaces
       summary: Создать рабочее пространство
+      operationId: createSpace
       description: Создать рабочее пространство
       requestBody:
         content:
@@ -49,11 +51,12 @@ paths:
         required: true
         schema:
           type: integer
-        description: Уникальный идентификатор блока
-    post:
+        description: Уникальный идентификатор пространства
+    put:
       tags:
         - spaces
-      summary: Сохранить изменения рабочего пространства
+      summary: Обновить рабочее пространство
+      operationId: updateSpace
       description: Сохранить изменения рабочего пространства
       requestBody:
         content:
@@ -66,13 +69,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Block'
+                $ref: '#/components/schemas/Space'
 
   /blocks:
     get:
       tags:
         - blocks
       summary: Получить список блоков контента
+      operationId: getBlocks
       description: Получить список блоков контента
       responses:
         '200':
@@ -84,7 +88,8 @@ paths:
     post:
       tags:
         - blocks
-      summary: Создать страницу
+      summary: Создать блок контента
+      operationId: createBlock
       description: Создать страницу
       requestBody:
         content:
@@ -107,10 +112,11 @@ paths:
         schema:
           type: integer
         description: Уникальный идентификатор блока
-    post:
+    put:
       tags:
         - blocks
-      summary: Отправить на сохранение изменения контента
+      summary: Обновить блок контента
+      operationId: updateBlock
       description: Отправить на сохранение изменения контента
       requestBody:
         content:
@@ -127,6 +133,11 @@ paths:
 
 components:
   schemas:
+    SpaceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Space'
+
     Space:
       type: object
       properties:
@@ -189,7 +200,7 @@ components:
           type: string
         parent_id:
           type: integer
-
+  
     BlockUpdate:
       type: object
       properties:

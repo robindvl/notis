@@ -1,21 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { Block, Space, SpaceCreate, SpaceUpdate } from '../models';
+import { Space, SpaceCreate, SpaceUpdate,  } from '../models';
+
 
 @Injectable()
 export abstract class SpacesApi {
-  abstract spacesGet(
-    request: Request,
-  ): Space | Promise<Space> | Observable<Space>;
 
-  abstract spacesIdPost(
-    id: number,
-    spaceUpdate: SpaceUpdate,
-    request: Request,
-  ): Block | Promise<Block> | Observable<Block>;
+  abstract createSpace(spaceCreate: SpaceCreate,  request: Request): Space | Promise<Space> | Observable<Space>;
 
-  abstract spacesPost(
-    spaceCreate: SpaceCreate,
-    request: Request,
-  ): Space | Promise<Space> | Observable<Space>;
-}
+
+  abstract getSpaces( request: Request): Array<Space> | Promise<Array<Space>> | Observable<Array<Space>>;
+
+
+  abstract updateSpace(id: number, spaceUpdate: SpaceUpdate,  request: Request): Space | Promise<Space> | Observable<Space>;
+
+} 

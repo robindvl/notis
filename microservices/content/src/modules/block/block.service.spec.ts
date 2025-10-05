@@ -22,7 +22,7 @@ describe('BlocksService', () => {
     }).compile();
 
     service = module.get<BlocksService>(BlocksService);
-    blocks = await handleResult(await service.blocksGet());
+    blocks = await handleResult(await service.getBlocks());
   });
 
   it('Сервис определен', () => {
@@ -57,8 +57,8 @@ describe('BlocksService', () => {
     let newBlocks: Block[];
 
     beforeEach(async () => {
-      await service.blocksPost(newBlock);
-      newBlocks = await handleResult(await service.blocksGet());
+      await service.createBlock(newBlock);
+      newBlocks = await handleResult(await service.getBlocks());
     });
 
     it('Список стал больше', () => {
@@ -102,9 +102,9 @@ describe('BlocksService', () => {
         throw new Error('Нет блока для обновления');
       }
 
-      await service.blocksIdPost(blocks[0].id, blockUpdate);
+      await service.updateBlock(blocks[0].id, blockUpdate);
 
-      updatedBlocks = await handleResult(await service.blocksGet());
+      updatedBlocks = await handleResult(await service.getBlocks());
     });
 
     it('Блок был корректно изменен', () => {
