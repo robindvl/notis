@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
+
 import { BlocksApi } from 'src/@generated/api';
 import { Block, BlockCreate, BlockUpdate } from 'src/@generated/models';
 
@@ -17,6 +18,15 @@ export class BlocksService implements BlocksApi {
     blockCreate: BlockCreate,
   ): Block | Promise<Block> | Observable<Block> {
     return this.repository.create(blockCreate);
+  }
+
+  getBlock(id: number): Promise<Block> {
+    return this.repository.findOne(Number(id)).then((item) => {
+      if (!item) {
+        throw new Error('Block not found');
+      }
+      return item;
+    });
   }
 
   updateBlock(

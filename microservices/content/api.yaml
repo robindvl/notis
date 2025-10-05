@@ -52,6 +52,20 @@ paths:
         schema:
           type: integer
         description: Уникальный идентификатор пространства
+    get:
+      tags:
+        - spaces
+      summary: Получить рабочее пространство
+      operationId: getSpace
+      description: Получить рабочее пространство
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Space'
+
     put:
       tags:
         - spaces
@@ -112,6 +126,20 @@ paths:
         schema:
           type: integer
         description: Уникальный идентификатор блока
+    get:
+      tags:
+        - blocks
+      summary: Получить блок контента
+      operationId: getBlock
+      description: Получить блок контента
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Block'
+                
     put:
       tags:
         - blocks

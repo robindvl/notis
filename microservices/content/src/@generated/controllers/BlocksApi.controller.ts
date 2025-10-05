@@ -12,6 +12,11 @@ export class BlocksApiController {
     return this.blocksApi.createBlock(blockCreate, request);
   }
 
+  @Get('/blocks/:id')
+  getBlock(@Param('id') id: number, @Req() request: Request): Block | Promise<Block> | Observable<Block> {
+    return this.blocksApi.getBlock(id, request);
+  }
+
   @Get('/blocks')
   getBlocks(@Req() request: Request): Array<Block> | Promise<Array<Block>> | Observable<Array<Block>> {
     return this.blocksApi.getBlocks(request);

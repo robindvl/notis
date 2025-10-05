@@ -12,6 +12,11 @@ export class SpacesApiController {
     return this.spacesApi.createSpace(spaceCreate, request);
   }
 
+  @Get('/spaces/:id')
+  getSpace(@Param('id') id: number, @Req() request: Request): Space | Promise<Space> | Observable<Space> {
+    return this.spacesApi.getSpace(id, request);
+  }
+
   @Get('/spaces')
   getSpaces(@Req() request: Request): Array<Space> | Promise<Array<Space>> | Observable<Array<Space>> {
     return this.spacesApi.getSpaces(request);

@@ -29,14 +29,14 @@ describe('BlocksService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('Получение списка блоков', () => {
+  describe('Получение список элементов', () => {
     it('Полученный результат является массивом', () => {
       expect(Array.isArray(blocks)).toBeTruthy();
     });
 
     it('Первый элемент списка имеет нужные поля', () => {
       if (blocks.length === 0) {
-        throw new Error('Список блоков пуст');
+        throw new Error('Список элементов пуст');
       }
 
       const firstBlock = blocks[0];
@@ -49,9 +49,9 @@ describe('BlocksService', () => {
     });
   });
 
-  describe('Добавить новый блок', () => {
+  describe('Добавить новый элемент', () => {
     const newBlock: BlockCreate = {
-      name: 'Блок New',
+      name: 'New element',
     };
 
     let newBlocks: Block[];
@@ -65,22 +65,22 @@ describe('BlocksService', () => {
       expect(newBlocks.length).toBe(blocks.length + 1);
     });
 
-    it('Новый блок присутствует в списке', () => {
+    it('Новый элемент присутствует в списке', () => {
       const newBlockInList = newBlocks.find(
-        (block) => block.name === 'Блок New',
+        (block) => block.name === 'New element',
       );
       expect(newBlockInList).toBeDefined();
       expect(newBlockInList?.id).toBeDefined();
     });
 
-    it('Структура нового блока корректна', () => {
+    it('Структура нового элемента корректна', () => {
       const expectedBlockFields = {
         id: 1,
         name: '',
       } satisfies Block;
 
       const newBlockInList = newBlocks.find(
-        (block) => block.name === 'Блок New',
+        (block) => block.name === 'New element',
       );
       if (!newBlockInList) {
         throw new Error('Элемент не найден');
@@ -90,7 +90,7 @@ describe('BlocksService', () => {
     });
   });
 
-  describe('Обновить блок', () => {
+  describe('Обновить элемент', () => {
     const blockUpdate = {
       name: `Block ${Math.round(Math.random() * 1000)}`,
     };
@@ -99,7 +99,7 @@ describe('BlocksService', () => {
 
     beforeEach(async () => {
       if (!blocks[0] || !blocks[0].id) {
-        throw new Error('Нет блока для обновления');
+        throw new Error('Нет элемента для обновления');
       }
 
       await service.updateBlock(blocks[0].id, blockUpdate);
@@ -107,14 +107,14 @@ describe('BlocksService', () => {
       updatedBlocks = await handleResult(await service.getBlocks());
     });
 
-    it('Блок был корректно изменен', () => {
+    it('Элемент был корректно изменен', () => {
       const prevBlock = blocks[0];
       const updatedBlock = updatedBlocks.find(
         (block) => block.id === prevBlock.id,
       );
 
       if (!updatedBlock) {
-        throw new Error('Обновленный блок не найден');
+        throw new Error('Обновленный элемент не найден');
       }
 
       expect(prevBlock.id).toBe(updatedBlock.id);

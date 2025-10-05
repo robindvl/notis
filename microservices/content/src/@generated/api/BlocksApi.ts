@@ -9,6 +9,9 @@ export abstract class BlocksApi {
   abstract createBlock(blockCreate: BlockCreate,  request: Request): Block | Promise<Block> | Observable<Block>;
 
 
+  abstract getBlock(id: number,  request: Request): Block | Promise<Block> | Observable<Block>;
+
+
   abstract getBlocks( request: Request): Array<Block> | Promise<Array<Block>> | Observable<Array<Block>>;
 
 

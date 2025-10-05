@@ -5,6 +5,7 @@ import { ApiModule } from './api.module';
 import { SpacesService } from './modules/space/space.service';
 import { BlocksService } from './modules/block/block.service';
 import { BlocksModule } from './modules/block/block.module';
+import { SpacesModule } from './modules/space/space.module';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { BlocksModule } from './modules/block/block.module';
         spacesApi: SpacesService,
         blocksApi: BlocksService,
       },
-      { modules: [BlocksModule] },
+      { modules: [BlocksModule, SpacesModule] },
     ),
   ],
   controllers: [AppController],

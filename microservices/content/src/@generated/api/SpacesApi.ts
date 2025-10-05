@@ -9,6 +9,9 @@ export abstract class SpacesApi {
   abstract createSpace(spaceCreate: SpaceCreate,  request: Request): Space | Promise<Space> | Observable<Space>;
 
 
+  abstract getSpace(id: number,  request: Request): Space | Promise<Space> | Observable<Space>;
+
+
   abstract getSpaces( request: Request): Array<Space> | Promise<Array<Space>> | Observable<Array<Space>>;
 
 
