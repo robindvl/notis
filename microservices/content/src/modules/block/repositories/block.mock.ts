@@ -33,22 +33,26 @@ export class BlocksMockRepository implements BlockRepository {
 
   update(id: number, entity: Block): Promise<Block> {
     const block = {
-      id: id,
+      id: Number(id),
       name: entity.name || '',
     };
-    const findIndexBlock = this.blocks.findIndex((block) => block.id === id);
+    const findIndexBlock = this.blocks.findIndex(
+      (block) => block.id === Number(id),
+    );
     this.blocks[findIndexBlock] = block;
     return Promise.resolve(block);
   }
 
   findOne(id: any): Promise<Block | undefined> {
-    return Promise.resolve(this.blocks.find((block) => block.id === id));
+    return Promise.resolve(
+      this.blocks.find((block) => block.id === Number(id)),
+    );
   }
 
   async delete(id: any): Promise<Block | undefined> {
     const block = await this.findOne(id);
     if (block) {
-      this.blocks = this.blocks.filter((b) => b.id !== id);
+      this.blocks = this.blocks.filter((b) => b.id !== Number(id));
     }
     return Promise.resolve(block);
   }

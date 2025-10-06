@@ -32,23 +32,27 @@ export class SpacesMockRepository implements SpaceRepository {
   }
 
   update(id: number, entity: Space): Promise<Space> {
-    const element = {
-      id: id,
+    const newElement = {
+      id: Number(id),
       name: entity.name || '',
     };
-    const findIndex = this.spaces.findIndex((element) => element.id === id);
-    this.spaces[findIndex] = element;
-    return Promise.resolve(element);
+    const findIndex = this.spaces.findIndex(
+      (element) => element.id === Number(id),
+    );
+    this.spaces[findIndex] = newElement;
+    return Promise.resolve(newElement);
   }
 
-  findOne(id: any): Promise<Space | undefined> {
-    return Promise.resolve(this.spaces.find((element) => element.id === id));
+  findOne(id: number): Promise<Space | undefined> {
+    return Promise.resolve(
+      this.spaces.find((element) => element.id === Number(id)),
+    );
   }
 
-  async delete(id: any): Promise<Space | undefined> {
+  async delete(id: number): Promise<Space | undefined> {
     const element = await this.findOne(id);
     if (element) {
-      this.spaces = this.spaces.filter((b) => b.id !== id);
+      this.spaces = this.spaces.filter((b) => b.id !== Number(id));
     }
     return Promise.resolve(element);
   }

@@ -187,12 +187,3 @@ events {
 Начну разработку с `microservises/content`, по этому приведу пример тестирования API.
 
 Условнное API.
-
-
-## Генерация
-
-Сделать генерацию контроллеров для nestjs по openapi
-
-https://notiz.dev/blog/openapi-in-nestjs
-
-https://docs.nestjs.com/openapi/introduction
