@@ -40,7 +40,11 @@ export function SpaceSwitcher() {
 
   const handleSpaceChange = (spaceId: string) => {
     // Сохраняем текущий подраздел (notes, tracker, messenger) при переключении space
-    const section = pathname.split('/').pop()
+    const segments = pathname.split('/')
+    const currentSection = segments[3]
+    const validSections = ['notes', 'tracker', 'messenger']
+    const section = validSections.includes(currentSection) ? currentSection : 'notes'
+    
     router.push(`/spaces/${spaceId}/${section}`)
   }
 
