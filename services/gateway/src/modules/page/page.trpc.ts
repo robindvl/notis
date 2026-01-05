@@ -10,39 +10,36 @@ import type { KeysArray } from '../../common/flattened.types';
 
 const pages = [
   {
-    id: Math.random(),
-    uuid: uuidv7(),
+    id: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
     section: {
-      id: Math.random(),
+      id: uuidv7(),
       name: 'name',
       pages: [],
-      space_id: 1,
+      space_id: uuidv7(),
     },
   },
   {
-    id: Math.random(),
-    uuid: uuidv7(),
+    id: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
     section: {
-      id: Math.random(),
+      id: uuidv7(),
       name: 'name',
       pages: [],
-      space_id: 1,
+      space_id: uuidv7(),
     },
   },
   {
-    id: Math.random(),
-    uuid: uuidv7(),
+    id: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
     section: {
-      id: Math.random(),
+      id: uuidv7(),
       name: 'name',
       pages: [],
-      space_id: 1,
+      space_id: uuidv7(),
     },
   },
 ] satisfies TPages;
@@ -52,7 +49,7 @@ type TMeta = {
 };
 
 const validateList = typia.createAssert<TMeta>();
-const validateShow = typia.createAssert<{ uuid: string } & TMeta>();
+const validateShow = typia.createAssert<{ id: string } & TMeta>();
 
 @Injectable()
 export class PageTrpcRouter extends BaseRouter {
@@ -72,17 +69,16 @@ export class PageTrpcRouter extends BaseRouter {
   show() {
     return this.trpcService.procedure
       .input(validateShow)
-      .query(({ input: { uuid } }) => {
+      .query(({ input: { id } }) => {
         return {
-          id: Math.random(),
-          uuid: uuid,
+          id: id,
           name: faker.lorem.paragraph(),
           emoji: faker.internet.emoji(),
           section: {
-            id: Math.random(),
+            id: uuidv7(),
             name: 'name',
             pages: [],
-            space_id: 1,
+            space_id: uuidv7(),
           },
         } satisfies TPage;
       });

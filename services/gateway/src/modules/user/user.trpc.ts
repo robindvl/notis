@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import typia from 'typia';
+import { uuidv7 } from 'uuidv7';
 
 import { UserCreateSchema } from './user.validate';
 import { TrpcService } from '../../processors/trpc/trpc.service';
@@ -13,7 +14,7 @@ type TMeta = {
 
 const validateMeta = typia.createAssert<TMeta>();
 const validateShow = typia.createAssert<{
-  id: number;
+  id: string;
   name?: string;
 }>();
 
@@ -43,14 +44,14 @@ export class UserTrpcRouter extends BaseRouter {
           .query(({ input }) => {
             const pages: Record<number, TUsers> = {
               1: [
-                { id: 1, name: `John Doe 1` },
-                { id: 2, name: `John Doe 2` },
-                { id: 3, name: `John Doe 3` },
+                { id: uuidv7(), name: `John Doe 1` },
+                { id: uuidv7(), name: `John Doe 2` },
+                { id: uuidv7(), name: `John Doe 3` },
               ],
               2: [
-                { id: 4, name: `John Doe 4` },
-                { id: 5, name: `John Doe 5` },
-                { id: 6, name: `John Doe 6` },
+                { id: uuidv7(), name: `John Doe 4` },
+                { id: uuidv7(), name: `John Doe 5` },
+                { id: uuidv7(), name: `John Doe 6` },
               ],
             };
             return pages[input.page];

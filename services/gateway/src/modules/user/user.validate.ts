@@ -21,6 +21,6 @@ export const UserCreateSchema = typia.createAssert<UserBase>();
 
 export const UserUpdateSchema = typia.createAssert<
   UserBase & {
-    id: number;
+    id: string;
   }
 >();

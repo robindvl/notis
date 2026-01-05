@@ -25,7 +25,7 @@ export function SpaceSwitcher() {
   const params = useParams()
   const router = useRouter()
   const pathname = usePathname()
-  const currentId = Number(params?.id)
+  const currentId = params?.id as string
 
   const { data: spaces } = useQuery(trpc.spaces.list.queryOptions())
 
@@ -38,7 +38,7 @@ export function SpaceSwitcher() {
     return null
   }
 
-  const handleSpaceChange = (spaceId: number) => {
+  const handleSpaceChange = (spaceId: string) => {
     // Сохраняем текущий подраздел (notes, tracker, messenger) при переключении space
     const section = pathname.split('/').pop()
     router.push(`/spaces/${spaceId}/${section}`)

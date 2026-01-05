@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { faker } from '@faker-js/faker/locale/ru';
+import { uuidv7 } from 'uuidv7';
 import typia from 'typia';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
@@ -8,39 +9,39 @@ import { TSection, TSections } from './section.types';
 
 const sections = [
   {
-    id: 1,
+    id: uuidv7(),
     name: 'Документация',
-    space_id: 1,
+    space_id: uuidv7(),
     pages: [
       {
-        id: Math.random(),
+        id: uuidv7(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
       },
       {
-        id: Math.random(),
+        id: uuidv7(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
       },
       {
-        id: Math.random(),
+        id: uuidv7(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
       },
       {
-        id: Math.random(),
+        id: uuidv7(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
       },
       {
-        id: Math.random(),
+        id: uuidv7(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
       },
     ],
   },
-  { id: Math.random(), space_id: 1, name: 'База данных', pages: [] },
-  { id: Math.random(), space_id: 1, name: 'Финансы', pages: [] },
+  { id: uuidv7(), space_id: uuidv7(), name: 'База данных', pages: [] },
+  { id: uuidv7(), space_id: uuidv7(), name: 'Финансы', pages: [] },
 ] satisfies TSections;
 
 const validateCreate = typia.createAssert<{ name: string }>();
@@ -65,10 +66,10 @@ export class SectionTrpcRouter extends BaseRouter {
       .input(validateCreate)
       .mutation(() => {
         const item = {
-          id: Math.random(),
+          id: uuidv7(),
           name: faker.book.title(),
           pages: [],
-          space_id: 1,
+          space_id: uuidv7(),
         } satisfies TSection;
         sections.push(item);
         return item;
