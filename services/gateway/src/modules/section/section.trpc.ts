@@ -11,73 +11,36 @@ const sections = [
     id: 1,
     name: 'Документация',
     space_id: 1,
-    blocks: [
+    pages: [
       {
         id: Math.random(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
-        type: 'page',
-        // children: [
-        //   {
-        //     id: Math.random(),
-        //     name: faker.lorem.paragraph(),
-        //     emoji: faker.internet.emoji(),
-        //     type: 'page',
-        //   },
-        //   {
-        //     id: Math.random(),
-        //     name: faker.lorem.paragraph(),
-        //     emoji: faker.internet.emoji(),
-        //     type: 'page',
-        //   },
-        //   {
-        //     id: Math.random(),
-        //     name: faker.lorem.paragraph(),
-        //     emoji: faker.internet.emoji(),
-        //     type: 'page',
-        //   },
-        //   {
-        //     id: Math.random(),
-        //     name: faker.lorem.paragraph(),
-        //     emoji: faker.internet.emoji(),
-        //     type: 'page',
-        //   },
-        //   {
-        //     id: Math.random(),
-        //     name: faker.lorem.paragraph(),
-        //     emoji: faker.internet.emoji(),
-        //     type: 'page',
-        //   },
-        // ],
       },
       {
         id: Math.random(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
-        type: 'page',
       },
       {
         id: Math.random(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
-        type: 'page',
       },
       {
         id: Math.random(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
-        type: 'page',
       },
       {
         id: Math.random(),
         name: faker.lorem.paragraph(),
         emoji: faker.internet.emoji(),
-        type: 'page',
       },
     ],
   },
-  { id: Math.random(), space_id: 1, name: 'База данных', blocks: [] },
-  { id: Math.random(), space_id: 1, name: 'Финансы', blocks: [] },
+  { id: Math.random(), space_id: 1, name: 'База данных', pages: [] },
+  { id: Math.random(), space_id: 1, name: 'Финансы', pages: [] },
 ] satisfies TSections;
 
 @Injectable()
@@ -106,7 +69,7 @@ export class SectionTrpcRouter extends BaseRouter {
         const item = {
           id: Math.random(),
           name: faker.book.title(),
-          blocks: [],
+          pages: [],
           space_id: 1,
         } satisfies TSection;
         sections.push(item);

@@ -1,9 +1,9 @@
-export type TBlock = { id: number; name: string; emoji: string; type: 'page' };
+export type TPageSnippet = { id: number; name: string; emoji: string };
 
 export type TSection = {
   id: number;
   name: string;
-  blocks: TBlock[];
+  pages: TPageSnippet[];
   space_id: number;
 };
 

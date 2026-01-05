@@ -5,20 +5,19 @@ import typia from 'typia';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
-import { TBlock, TBlocks } from './block.types';
+import { TPage, TPages } from './page.types';
 import type { KeysArray } from '../../common/flattened.types';
 
-const blocks = [
+const pages = [
   {
     id: Math.random(),
     uuid: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
-    type: 'page',
     section: {
       id: Math.random(),
       name: 'name',
-      blocks: [],
+      pages: [],
       space_id: 1,
     },
   },
@@ -27,11 +26,10 @@ const blocks = [
     uuid: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
-    type: 'page',
     section: {
       id: Math.random(),
       name: 'name',
-      blocks: [],
+      pages: [],
       space_id: 1,
     },
   },
@@ -40,58 +38,31 @@ const blocks = [
     uuid: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
-    type: 'page',
     section: {
       id: Math.random(),
       name: 'name',
-      blocks: [],
+      pages: [],
       space_id: 1,
     },
   },
-  {
-    id: Math.random(),
-    uuid: uuidv7(),
-    name: faker.lorem.paragraph(),
-    emoji: faker.internet.emoji(),
-    type: 'page',
-    section: {
-      id: Math.random(),
-      name: 'name',
-      blocks: [],
-      space_id: 1,
-    },
-  },
-  {
-    id: Math.random(),
-    uuid: uuidv7(),
-    name: faker.lorem.paragraph(),
-    emoji: faker.internet.emoji(),
-    type: 'page',
-    section: {
-      id: Math.random(),
-      name: 'name',
-      blocks: [],
-      space_id: 1,
-    },
-  },
-] satisfies TBlocks;
+] satisfies TPages;
 
 type TMeta = {
-  attr?: KeysArray<TBlock>;
+  attr?: KeysArray<TPage>;
 };
 
 const validateList = typia.createAssert<TMeta>();
 const validateShow = typia.createAssert<{ uuid: string } & TMeta>();
 
 @Injectable()
-export class BlockTrpcRouter extends BaseRouter {
+export class PageTrpcRouter extends BaseRouter {
   routes;
 
   constructor(private readonly trpcService: TrpcService) {
     super();
 
     this.routes = {
-      blocks: this.trpcService.router({
+      pages: this.trpcService.router({
         list: this.list(),
         show: this.show(),
       }),
@@ -107,20 +78,19 @@ export class BlockTrpcRouter extends BaseRouter {
           uuid: uuid,
           name: faker.lorem.paragraph(),
           emoji: faker.internet.emoji(),
-          type: 'page',
           section: {
             id: Math.random(),
             name: 'name',
-            blocks: [],
+            pages: [],
             space_id: 1,
           },
-        } satisfies TBlock;
+        } satisfies TPage;
       });
   }
 
   list() {
     return this.trpcService.procedure.input(validateList).query(() => {
-      return blocks;
+      return pages;
     });
   }
 }

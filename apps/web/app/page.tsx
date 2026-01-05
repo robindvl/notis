@@ -11,7 +11,7 @@ export default function Page() {
   const params = useParams<{ pageUuid: string }>();
 
   const page = useQuery(
-      trpc.blocks.show.queryOptions({ uuid: params?.pageUuid || "" })
+      trpc.pages.show.queryOptions({ uuid: params?.pageUuid || "" })
   );
 
   return <>

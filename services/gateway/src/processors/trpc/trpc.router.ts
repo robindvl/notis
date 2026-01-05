@@ -7,7 +7,7 @@ import { TrpcService } from './trpc.service';
 import { UserTrpcRouter } from '../../modules/user/user.trpc';
 import { SpaceTrpcRouter } from '../../modules/space/space.trpc';
 import { SectionTrpcRouter } from '../../modules/section/section.trpc';
-import { BlockTrpcRouter } from '../../modules/block/block.trpc';
+import { PageTrpcRouter } from '../../modules/page/page.trpc';
 
 @Injectable()
 export class TrpcRouter {
@@ -18,13 +18,13 @@ export class TrpcRouter {
     private readonly userRouter: UserTrpcRouter,
     private readonly spaceRouter: SpaceTrpcRouter,
     private readonly sectionRouter: SectionTrpcRouter,
-    private readonly blockRouter: BlockTrpcRouter,
+    private readonly pageRouter: PageTrpcRouter,
   ) {
     this.appRouter = this.trpc.router({
       ...this.userRouter.routes,
       ...this.spaceRouter.routes,
       ...this.sectionRouter.routes,
-      ...this.blockRouter.routes,
+      ...this.pageRouter.routes,
     });
   }
 

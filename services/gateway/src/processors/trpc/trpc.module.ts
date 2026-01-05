@@ -5,7 +5,7 @@ import { TrpcService } from './trpc.service';
 import { UserTrpcRouter } from '../../modules/user/user.trpc';
 import { SpaceTrpcRouter } from '../../modules/space/space.trpc';
 import { SectionTrpcRouter } from '../../modules/section/section.trpc';
-import { BlockTrpcRouter } from '../../modules/block/block.trpc';
+import { PageTrpcRouter } from '../../modules/page/page.trpc';
 
 @Module({
   providers: [
@@ -14,7 +14,7 @@ import { BlockTrpcRouter } from '../../modules/block/block.trpc';
     UserTrpcRouter,
     SpaceTrpcRouter,
     SectionTrpcRouter,
-    BlockTrpcRouter,
+    PageTrpcRouter,
   ],
 })
 export class TrpcModule {}
