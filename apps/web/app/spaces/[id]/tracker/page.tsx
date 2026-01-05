@@ -11,5 +11,10 @@ export default function Page() {
     trpc.notes.show.queryOptions({ id: params?.noteId || "" })
   );
 
-  return note.data?.name;
+  return (
+    <div>
+      <h1>{note.data?.title}</h1>
+      <p>{note.data?.body}</p>
+    </div>
+  );
 }

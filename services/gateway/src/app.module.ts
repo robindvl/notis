@@ -6,7 +6,6 @@ import { AppService } from './app.service';
 import { TrpcModule } from './processors/trpc/trpc.module';
 import { UserModule } from './modules/user/user.module';
 import { SpaceModule } from './modules/space/space.module';
-import { SectionModule } from './modules/section/section.module';
 import { NoteModule } from './modules/note/note.module';
 
 @Module({
@@ -15,7 +14,6 @@ import { NoteModule } from './modules/note/note.module';
     TrpcModule,
     UserModule,
     SpaceModule,
-    SectionModule,
     NoteModule,
   ],
   controllers: [AppController],

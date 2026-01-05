@@ -11,7 +11,7 @@ type TMeta = {
   attr?: KeysArray<TNote>;
 };
 
-const validateList = typia.createAssert<TMeta>();
+const validateList = typia.createAssert<{ spaceId: string } & TMeta>();
 const validateShow = typia.createAssert<{ id: string } & TMeta>();
 
 @Injectable()
@@ -41,8 +41,8 @@ export class NoteTrpcRouter extends BaseRouter {
   }
 
   list() {
-    return this.trpcService.procedure.input(validateList).query(async () => {
-      return this.noteService.list();
+    return this.trpcService.procedure.input(validateList).query(async ({ input }) => {
+      return this.noteService.list(input.spaceId);
     });
   }
 }

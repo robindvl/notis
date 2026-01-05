@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 
 import { trpc } from "@/shared/api";
 import { Editor } from "@/components/blocks/editor-x/editor";
+import { Input } from "@/components/ui/input";
 import React, { useState, useEffect } from "react";
 import { SerializedEditorState } from "lexical";
 
@@ -14,12 +15,15 @@ export default function Page() {
         trpc.notes.show.queryOptions({ id: params?.noteId || "" })
     );
 
+    const [title, setTitle] = useState("");
     const [editorState, setEditorState] = useState<SerializedEditorState | null>(null);
 
     // Преобразуем строку в SerializedEditorState
     useEffect(() => {
-        if (note.data?.name) {
-            // Если note.data.name это строка, оборачиваем ее в структуру Lexical
+        if (note.data) {
+            setTitle(note.data.title || "");
+
+            // Теперь в редактор превращаем только body
             const transformedState = {
                 root: {
                     children: [
@@ -30,7 +34,7 @@ export default function Page() {
                                     format: 0,
                                     mode: "normal",
                                     style: "",
-                                    text: note.data.name, // Используем текст из note.data.name
+                                    text: note.data.body || "", // Используем текст из note.data.body
                                     type: "text",
                                     version: 1,
                                 },
@@ -52,7 +56,7 @@ export default function Page() {
 
             setEditorState(transformedState);
         }
-    }, [note.data?.name]);
+    }, [note.data?.id, note.data?.title, note.data?.body]);
 
     // Пока данные загружаются или преобразуются
     if (!editorState) {
@@ -60,11 +64,19 @@ export default function Page() {
     }
 
     return (
-        <div>
-            <Editor
-                editorSerializedState={editorState}
-                onSerializedChange={(value) => setEditorState(value)}
+        <div className="flex flex-col gap-4 p-8 max-w-4xl mx-auto">
+            <Input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Заголовок заметки"
+                className="text-4xl font-bold border-none shadow-none focus-visible:ring-0 px-0 h-auto py-2"
             />
+            <div className="border-t pt-4">
+                <Editor
+                    editorSerializedState={editorState}
+                    onSerializedChange={(value) => setEditorState(value)}
+                />
+            </div>
         </div>
     );
 }

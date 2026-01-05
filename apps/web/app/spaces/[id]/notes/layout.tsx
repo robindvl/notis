@@ -7,8 +7,8 @@ import { Switch } from "@/components/ui/switch"
 import { SpaceSwitcher } from "@/components/space-switcher"
 import { trpc } from '@/shared/api';
 import { useQuery } from '@tanstack/react-query';
-import {useParams} from "next/navigation";
-import Link from "next/link";
+import { useParams } from 'next/navigation';
+import { NotesTree } from "@/components/notes-tree";
 
 export default function NotesLayout({
   children,
@@ -16,8 +16,10 @@ export default function NotesLayout({
   children: React.ReactNode;
 }) {
   const params = useParams();
+  const spaceId = params?.id as string;
+
   const notes = useQuery(
-    trpc.notes.list.queryOptions({})
+    trpc.notes.list.queryOptions({ spaceId })
   );
 
   return (
@@ -26,10 +28,6 @@ export default function NotesLayout({
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
             <SpaceSwitcher />
-            <Label className="flex items-center gap-2 text-sm">
-              <span>Unreads</span>
-              <Switch className="shadow-none" />
-            </Label>
           </div>
           <SidebarInput placeholder="Type to search..." />
         </SidebarHeader>
@@ -37,17 +35,9 @@ export default function NotesLayout({
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
               {notes.data ?
-                notes.data.map(note => (
-                  <Link
-                    key={note.id}
-                    href={`/spaces/${params?.id}/notes/${note.id}`}
-                    className="flex items-center p-2 hover:bg-muted cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2 text-sm">
-                      <span>{note.emoji}</span> {note.name}
-                    </span>
-                  </Link>
-                ))
+                <NotesTree 
+                  notes={notes.data as any} 
+                />
                 : notes.isLoading ?
                   <div className="p-4 text-sm text-muted-foreground">Загрузка...</div>
                 : notes.isError ?

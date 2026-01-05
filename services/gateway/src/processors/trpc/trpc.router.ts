@@ -6,7 +6,6 @@ import { fastifyRequestHandler } from '@trpc/server/adapters/fastify';
 import { TrpcService } from './trpc.service';
 import { UserTrpcRouter } from '../../modules/user/user.trpc';
 import { SpaceTrpcRouter } from '../../modules/space/space.trpc';
-import { SectionTrpcRouter } from '../../modules/section/section.trpc';
 import { NoteTrpcRouter } from '../../modules/note/note.trpc';
 
 @Injectable()
@@ -17,13 +16,11 @@ export class TrpcRouter {
     private readonly trpc: TrpcService,
     private readonly userRouter: UserTrpcRouter,
     private readonly spaceRouter: SpaceTrpcRouter,
-    private readonly sectionRouter: SectionTrpcRouter,
     private readonly noteRouter: NoteTrpcRouter,
   ) {
     this.appRouter = this.trpc.router({
       ...this.userRouter.routes,
       ...this.spaceRouter.routes,
-      ...this.sectionRouter.routes,
       ...this.noteRouter.routes,
     });
   }

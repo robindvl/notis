@@ -5,53 +5,70 @@ import { uuidv7 } from 'uuidv7';
 
 @Injectable()
 export class NoteRepositoryMock extends NoteRepository {
-  private notes: Note[] = [
-    {
-      id: uuidv7(),
-      name: faker.lorem.paragraph(),
-      emoji: faker.internet.emoji(),
-      type: 'note',
-      spaceId: uuidv7(),
+  private notes: Note[] = [];
+  private generatedSpaceIds: Set<string> = new Set();
+
+  private generateNotesForSpace(spaceId: string) {
+    if (this.generatedSpaceIds.has(spaceId)) return;
+
+    // Генерируем разделы
+    const sections: Note[] = Array.from({ length: 2 }).map((_, i) => ({
+      id: `section-${spaceId}-${i}`,
+      title: faker.lorem.sentence(2).replace('.', ''),
+      body: faker.lorem.sentences(2),
+      emoji: i === 0 ? '📚' : '🗄️',
+      type: 'section',
+      spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
-      section: {
+    }));
+
+    // Генерируем заметки в разделах
+    const sectionNotes: Note[] = sections.flatMap((section) =>
+      Array.from({ length: 2 }).map(() => ({
         id: uuidv7(),
-        name: 'Документация',
-        notes: [],
-        space_id: uuidv7(),
-      },
-    },
-    {
+        title: faker.lorem.sentence(3).replace('.', ''),
+        body: faker.lorem.sentences(3),
+        emoji: faker.helpers.arrayElement(['📝', '📊', '📓', '📗']),
+        type: 'note',
+        spaceId,
+        sectionId: section.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })),
+    );
+
+    // Генерируем заметки в корне
+    const rootNotes: Note[] = Array.from({ length: 2 }).map(() => ({
       id: uuidv7(),
-      name: faker.lorem.paragraph(),
-      emoji: faker.internet.emoji(),
+      title: faker.lorem.sentence(2).replace('.', ''),
+      body: faker.lorem.sentences(2),
+      emoji: '🌱',
       type: 'note',
-      spaceId: uuidv7(),
+      spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
-      section: {
-        id: uuidv7(),
-        name: 'База данных',
-        notes: [],
-        space_id: uuidv7(),
-      },
-    },
-  ];
+    }));
+
+    this.notes.push(...sections, ...sectionNotes, ...rootNotes);
+    this.generatedSpaceIds.add(spaceId);
+  }
 
   async findById(id: string): Promise<Note | null> {
     return this.notes.find((n) => n.id === id) || null;
   }
 
   async findBySpaceId(spaceId: string): Promise<Note[]> {
-    return this.notes;
+    this.generateNotesForSpace(spaceId);
+    return this.notes.filter((n) => n.spaceId === spaceId);
   }
 
   async findBySectionId(sectionId: string): Promise<Note[]> {
-    return this.notes;
+    return this.notes.filter((n) => n.sectionId === sectionId);
   }
 
   async findByParentId(parentId: string): Promise<Note[]> {
-    return this.notes;
+    return this.notes.filter((n) => n.parentId === parentId);
   }
 
   async create(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note> {

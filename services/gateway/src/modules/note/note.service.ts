@@ -7,8 +7,8 @@ export class NoteService {
     private readonly noteRepository: NoteRepository,
   ) {}
 
-  async list(): Promise<Note[]> {
-    return this.noteRepository.findBySpaceId('mock-space');
+  async list(spaceId: string): Promise<Note[]> {
+    return this.noteRepository.findBySpaceId(spaceId);
   }
 
   async findById(id: string): Promise<Note | null> {

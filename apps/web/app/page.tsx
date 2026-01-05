@@ -14,7 +14,8 @@ export default function Page() {
   );
 
   return <>
-    {note.data?.name}
+    {note.data?.title}
+    {note.data?.body && <p>{note.data.body}</p>}
     <Button>Edit</Button>
     <AppSidebar/>
   </>;
