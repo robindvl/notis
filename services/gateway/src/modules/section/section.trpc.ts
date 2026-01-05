@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { faker } from '@faker-js/faker/locale/ru';
-import { type } from 'arktype';
+import typia from 'typia';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
@@ -43,6 +43,8 @@ const sections = [
   { id: Math.random(), space_id: 1, name: 'Финансы', pages: [] },
 ] satisfies TSections;
 
+const validateCreate = typia.createAssert<{ name: string }>();
+
 @Injectable()
 export class SectionTrpcRouter extends BaseRouter {
   routes;
@@ -60,11 +62,7 @@ export class SectionTrpcRouter extends BaseRouter {
 
   create() {
     return this.trpcService.procedure
-      .input(
-        type({
-          name: 'string',
-        }),
-      )
+      .input(validateCreate)
       .mutation(() => {
         const item = {
           id: Math.random(),

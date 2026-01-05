@@ -3,15 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import { trpc } from "@/shared/api";
-import {Button} from "@/components/ui/button";
+
 export default function Page() {
-    const params = useParams<{ pageUuid: string }>();
+  const params = useParams<{ pageUuid: string }>();
 
-    const page = useQuery(
-        trpc.pages.show.queryOptions({ uuid: params?.pageUuid || "" })
-    );
+  const page = useQuery(
+    trpc.pages.show.queryOptions({ uuid: params?.pageUuid || "" })
+  );
 
-    return <>
-        {page.data?.name}
-    </>;
+  return page.data?.name;
 }

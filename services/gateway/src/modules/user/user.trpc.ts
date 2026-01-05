@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { z } from 'zod';
-import { type } from 'arktype';
+import typia from 'typia';
 
 import { UserCreateSchema } from './user.validate';
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
 import type { TUsers } from './user.types';
 
-// const meta = {
-//   page: z.number(),
-//   size: z.number(),
-// };
+type TMeta = {
+  page: number;
+  size: number;
+};
 
-const meta = type({
-  page: 'number',
-  size: 'number',
-});
+const validateMeta = typia.createAssert<TMeta>();
+const validateShow = typia.createAssert<{
+  id: number;
+  name?: string;
+}>();
 
 @Injectable()
 export class UserTrpcRouter extends BaseRouter {
@@ -33,18 +33,13 @@ export class UserTrpcRouter extends BaseRouter {
           }),
 
         show: this.trpcService.procedure
-          .input(
-            z.object({
-              id: z.number(),
-              name: z.string().optional(),
-            }),
-          )
+          .input(validateShow)
           .query(({ input }) => {
             return { id: input.id, name: `John Doe ${input.id}` };
           }),
 
         list: this.trpcService.procedure
-          .input({ ...meta })
+          .input(validateMeta)
           .query(({ input }) => {
             const pages: Record<number, TUsers> = {
               1: [

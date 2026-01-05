@@ -1,29 +1,26 @@
-// import { z } from 'zod';
+import typia from 'typia';
 
-// const userBase = {
-//   name: z.string().min(7),
-//   login: z.string().min(3).max(55),
-//   email: z.string().min(3).max(55),
-// };
+type UserBase = {
+  /**
+   * @minLength 7
+   */
+  name: string;
+  /**
+   * @minLength 3
+   * @maxLength 55
+   */
+  login: string;
+  /**
+   * @minLength 3
+   * @maxLength 55
+   */
+  email: string;
+};
 
-// export const UserCreateSchema = z.object(userBase);
+export const UserCreateSchema = typia.createAssert<UserBase>();
 
-// export const UserUpdateSchema = z.object({
-//   ...userBase,
-//   id: z.number(),
-// });
-
-import { type } from 'arktype';
-
-const userBase = {
-  name: 'string>7',
-  login: 'string>3&string<56',
-  email: 'string>3&string<56',
-} as const;
-
-export const UserCreateSchema = type(userBase);
-
-export const UserUpdateSchema = type({
-  ...userBase,
-  id: 'number',
-});
+export const UserUpdateSchema = typia.createAssert<
+  UserBase & {
+    id: number;
+  }
+>();

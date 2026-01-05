@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { type } from 'arktype';
+import typia from 'typia';
 import { faker } from '@faker-js/faker/locale/ru';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
 import { TSpace, TSpaces } from './space.types';
+
+const validateShow = typia.createAssert<{ id: number }>();
 
 @Injectable()
 export class SpaceTrpcRouter extends BaseRouter {
@@ -23,11 +25,7 @@ export class SpaceTrpcRouter extends BaseRouter {
 
   show() {
     return this.trpcService.procedure
-      .input(
-        type({
-          id: 'number',
-        }),
-      )
+      .input(validateShow)
       .query(({ input: { id } }) => {
         return {
           id,
