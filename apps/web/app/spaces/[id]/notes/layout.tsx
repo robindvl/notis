@@ -5,12 +5,20 @@ import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHead
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { SpaceSwitcher } from "@/components/space-switcher"
+import { trpc } from '@/shared/api';
+import { useQuery } from '@tanstack/react-query';
 
 export default function NotesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const notes = useQuery(
+    trpc.notes.list.queryOptions({})
+  );
+
+  console.log(notes.data)
+  
   return (
     <>
       <Sidebar collapsible="none" className="hidden w-80 md:flex border-r">
