@@ -1,3 +1,9 @@
-export default function Layout({ children }) {
-    return <div>{children}</div>;
+import React from 'react';
+
+export default function NotesLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
 }
