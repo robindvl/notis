@@ -1,60 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { faker } from '@faker-js/faker/locale/ru';
-import { uuidv7 } from 'uuidv7';
 import typia from 'typia';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
-import { TNote, TNotes } from './note.types';
+import { NoteService } from './note.service';
+import { TNote } from './note.types';
 import type { KeysArray } from '../../common/flattened.types';
-
-const notes = [
-  {
-    id: uuidv7(),
-    name: faker.lorem.paragraph(),
-    emoji: faker.internet.emoji(),
-    type: 'note',
-    spaceId: uuidv7(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    section: {
-      id: uuidv7(),
-      name: 'name',
-      notes: [],
-      space_id: uuidv7(),
-    },
-  },
-  {
-    id: uuidv7(),
-    name: faker.lorem.paragraph(),
-    emoji: faker.internet.emoji(),
-    type: 'note',
-    spaceId: uuidv7(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    section: {
-      id: uuidv7(),
-      name: 'name',
-      notes: [],
-      space_id: uuidv7(),
-    },
-  },
-  {
-    id: uuidv7(),
-    name: faker.lorem.paragraph(),
-    emoji: faker.internet.emoji(),
-    type: 'note',
-    spaceId: uuidv7(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    section: {
-      id: uuidv7(),
-      name: 'name',
-      notes: [],
-      space_id: uuidv7(),
-    },
-  },
-] satisfies TNotes;
 
 type TMeta = {
   attr?: KeysArray<TNote>;
@@ -67,7 +18,10 @@ const validateShow = typia.createAssert<{ id: string } & TMeta>();
 export class NoteTrpcRouter extends BaseRouter {
   routes;
 
-  constructor(private readonly trpcService: TrpcService) {
+  constructor(
+    private readonly trpcService: TrpcService,
+    private readonly noteService: NoteService,
+  ) {
     super();
 
     this.routes = {
@@ -81,28 +35,14 @@ export class NoteTrpcRouter extends BaseRouter {
   show() {
     return this.trpcService.procedure
       .input(validateShow)
-      .query(({ input: { id } }) => {
-        return {
-          id: id,
-          name: faker.lorem.paragraph(),
-          emoji: faker.internet.emoji(),
-          type: 'note',
-          spaceId: uuidv7(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          section: {
-            id: uuidv7(),
-            name: 'name',
-            notes: [],
-            space_id: uuidv7(),
-          },
-        } satisfies TNote;
+      .query(async ({ input: { id } }) => {
+        return this.noteService.findById(id);
       });
   }
 
   list() {
-    return this.trpcService.procedure.input(validateList).query(() => {
-      return notes;
+    return this.trpcService.procedure.input(validateList).query(async () => {
+      return this.noteService.list();
     });
   }
 }

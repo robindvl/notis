@@ -1,10 +1,10 @@
 import { Space } from '../entities/space';
 
-export interface SpaceRepository {
-  findById(id: string): Promise<Space | null>;
-  findByOwnerId(ownerId: string): Promise<Space[]>;
-  create(space: Omit<Space, 'id' | 'createdAt' | 'updatedAt'>): Promise<Space>;
-  update(id: string, space: Partial<Space>): Promise<Space>;
-  delete(id: string): Promise<void>;
+export abstract class SpaceRepository {
+  abstract findAll(): Promise<Space[]>;
+  abstract findById(id: string): Promise<Space | null>;
+  abstract findByOwnerId(ownerId: string): Promise<Space[]>;
+  abstract create(space: Omit<Space, 'id' | 'created_at'>): Promise<Space>;
+  abstract update(id: string, space: Partial<Space>): Promise<Space>;
+  abstract delete(id: string): Promise<void>;
 }
-

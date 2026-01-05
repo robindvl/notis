@@ -1,48 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { faker } from '@faker-js/faker/locale/ru';
-import { uuidv7 } from 'uuidv7';
 import typia from 'typia';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
-import { TSection, TSections } from './section.types';
-
-const sections = [
-  {
-    id: uuidv7(),
-    name: 'Документация',
-    space_id: uuidv7(),
-    notes: [
-      {
-        id: uuidv7(),
-        name: faker.lorem.paragraph(),
-        emoji: faker.internet.emoji(),
-      },
-      {
-        id: uuidv7(),
-        name: faker.lorem.paragraph(),
-        emoji: faker.internet.emoji(),
-      },
-      {
-        id: uuidv7(),
-        name: faker.lorem.paragraph(),
-        emoji: faker.internet.emoji(),
-      },
-      {
-        id: uuidv7(),
-        name: faker.lorem.paragraph(),
-        emoji: faker.internet.emoji(),
-      },
-      {
-        id: uuidv7(),
-        name: faker.lorem.paragraph(),
-        emoji: faker.internet.emoji(),
-      },
-    ],
-  },
-  { id: uuidv7(), space_id: uuidv7(), name: 'База данных', notes: [] },
-  { id: uuidv7(), space_id: uuidv7(), name: 'Финансы', notes: [] },
-] satisfies TSections;
+import { SectionService } from './section.service';
 
 const validateCreate = typia.createAssert<{ name: string }>();
 
@@ -50,7 +11,10 @@ const validateCreate = typia.createAssert<{ name: string }>();
 export class SectionTrpcRouter extends BaseRouter {
   routes;
 
-  constructor(private readonly trpcService: TrpcService) {
+  constructor(
+    private readonly trpcService: TrpcService,
+    private readonly sectionService: SectionService,
+  ) {
     super();
 
     this.routes = {
@@ -64,21 +28,14 @@ export class SectionTrpcRouter extends BaseRouter {
   create() {
     return this.trpcService.procedure
       .input(validateCreate)
-      .mutation(() => {
-        const item = {
-          id: uuidv7(),
-          name: faker.book.title(),
-          notes: [],
-          space_id: uuidv7(),
-        } satisfies TSection;
-        sections.push(item);
-        return item;
+      .mutation(async ({ input }) => {
+        return this.sectionService.create(input.name);
       });
   }
 
   list() {
-    return this.trpcService.procedure.query(() => {
-      return sections;
+    return this.trpcService.procedure.query(async () => {
+      return this.sectionService.list();
     });
   }
 }

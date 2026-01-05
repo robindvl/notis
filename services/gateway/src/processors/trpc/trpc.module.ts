@@ -1,20 +1,14 @@
 import { Module } from '@nestjs/common';
 
 import { TrpcRouter } from './trpc.router';
-import { TrpcService } from './trpc.service';
-import { UserTrpcRouter } from '../../modules/user/user.trpc';
-import { SpaceTrpcRouter } from '../../modules/space/space.trpc';
-import { SectionTrpcRouter } from '../../modules/section/section.trpc';
-import { NoteTrpcRouter } from '../../modules/note/note.trpc';
+import { TrpcCoreModule } from './trpc-core.module';
+import { UserModule } from '../../modules/user/user.module';
+import { SpaceModule } from '../../modules/space/space.module';
+import { SectionModule } from '../../modules/section/section.module';
+import { NoteModule } from '../../modules/note/note.module';
 
 @Module({
-  providers: [
-    TrpcService,
-    TrpcRouter,
-    UserTrpcRouter,
-    SpaceTrpcRouter,
-    SectionTrpcRouter,
-    NoteTrpcRouter,
-  ],
+  imports: [TrpcCoreModule, UserModule, SpaceModule, SectionModule, NoteModule],
+  providers: [TrpcRouter],
 })
 export class TrpcModule {}

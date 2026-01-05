@@ -15,13 +15,10 @@ export default function NotesLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const params = useParams();
   const notes = useQuery(
     trpc.notes.list.queryOptions({})
   );
-
-  const params = useParams();
-
-  console.log(notes)
 
   return (
     <>

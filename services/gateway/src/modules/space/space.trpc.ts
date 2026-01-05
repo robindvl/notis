@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import typia from 'typia';
-import { faker } from '@faker-js/faker/locale/ru';
-import { uuidv7 } from 'uuidv7';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
-import { TSpace, TSpaces } from './space.types';
+import { SpaceService } from './space.service';
 
 const validateShow = typia.createAssert<{ id: string }>();
 
@@ -13,7 +11,10 @@ const validateShow = typia.createAssert<{ id: string }>();
 export class SpaceTrpcRouter extends BaseRouter {
   routes;
 
-  constructor(private readonly trpcService: TrpcService) {
+  constructor(
+    private readonly trpcService: TrpcService,
+    private readonly spaceService: SpaceService,
+  ) {
     super();
 
     this.routes = {
@@ -27,38 +28,14 @@ export class SpaceTrpcRouter extends BaseRouter {
   show() {
     return this.trpcService.procedure
       .input(validateShow)
-      .query(({ input: { id } }) => {
-        return {
-          id,
-          name: faker.book.format(),
-          created_at: String(Math.random()),
-          img: faker.image.avatar(),
-        } satisfies TSpace;
+      .query(async ({ input: { id } }) => {
+        return this.spaceService.findById(id);
       });
   }
 
   list() {
-    return this.trpcService.procedure.query(() => {
-      return [
-        {
-          id: uuidv7(),
-          name: faker.book.format(),
-          img: faker.image.avatar(),
-          created_at: String(Math.random()),
-        },
-        {
-          id: uuidv7(),
-          name: faker.book.format(),
-          img: faker.image.avatar(),
-          created_at: String(Math.random()),
-        },
-        {
-          id: uuidv7(),
-          name: faker.book.format(),
-          img: faker.image.avatar(),
-          created_at: String(Math.random()),
-        },
-      ] satisfies TSpaces;
+    return this.trpcService.procedure.query(async () => {
+      return this.spaceService.list();
     });
   }
 }
