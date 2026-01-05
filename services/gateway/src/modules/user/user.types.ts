@@ -1,3 +1,4 @@
-export type TUser = { id: string; name: string };
+import { User } from '@repo/domain';
 
+export type TUser = User;
 export type TUsers = TUser[];

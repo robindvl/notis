@@ -12,7 +12,7 @@ const sections = [
     id: uuidv7(),
     name: 'Документация',
     space_id: uuidv7(),
-    pages: [
+    notes: [
       {
         id: uuidv7(),
         name: faker.lorem.paragraph(),
@@ -40,8 +40,8 @@ const sections = [
       },
     ],
   },
-  { id: uuidv7(), space_id: uuidv7(), name: 'База данных', pages: [] },
-  { id: uuidv7(), space_id: uuidv7(), name: 'Финансы', pages: [] },
+  { id: uuidv7(), space_id: uuidv7(), name: 'База данных', notes: [] },
+  { id: uuidv7(), space_id: uuidv7(), name: 'Финансы', notes: [] },
 ] satisfies TSections;
 
 const validateCreate = typia.createAssert<{ name: string }>();
@@ -68,7 +68,7 @@ export class SectionTrpcRouter extends BaseRouter {
         const item = {
           id: uuidv7(),
           name: faker.book.title(),
-          pages: [],
+          notes: [],
           space_id: uuidv7(),
         } satisfies TSection;
         sections.push(item);

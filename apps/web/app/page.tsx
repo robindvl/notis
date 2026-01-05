@@ -4,18 +4,17 @@ import { useParams } from "next/navigation";
 
 import { trpc } from "@/shared/api";
 import {Button} from "@/components/ui/button";
-import {Select} from "@/components/ui/select";
 import {AppSidebar} from "@/components/app-sidebar";
 
 export default function Page() {
-  const params = useParams<{ pageId: string }>();
+  const params = useParams<{ noteId: string }>();
 
-  const page = useQuery(
-    trpc.pages.show.queryOptions({ id: params?.pageId || "" })
+  const note = useQuery(
+    trpc.notes.show.queryOptions({ id: params?.noteId || "" })
   );
 
   return <>
-    {page.data?.name}
+    {note.data?.name}
     <Button>Edit</Button>
     <AppSidebar/>
   </>;

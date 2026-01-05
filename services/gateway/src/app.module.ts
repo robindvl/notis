@@ -7,7 +7,7 @@ import { TrpcModule } from './processors/trpc/trpc.module';
 import { UserModule } from './modules/user/user.model';
 import { SpaceModule } from './modules/space/space.model';
 import { SectionModule } from './modules/section/section.model';
-import { PageModule } from './modules/page/page.model';
+import { NoteModule } from './modules/note/note.model';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { PageModule } from './modules/page/page.model';
     UserModule,
     SpaceModule,
     SectionModule,
-    PageModule,
+    NoteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

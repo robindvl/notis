@@ -1,10 +1,5 @@
-export type TPageSnippet = { id: string; name: string; emoji: string };
+import { Section, TNoteSnippet as TNoteSnippetDomain } from '@repo/domain';
 
-export type TSection = {
-  id: string;
-  name: string;
-  pages: TPageSnippet[];
-  space_id: string;
-};
-
+export type TNoteSnippet = TNoteSnippetDomain;
+export type TSection = Section;
 export type TSections = TSection[];

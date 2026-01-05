@@ -5,18 +5,22 @@ import typia from 'typia';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
-import { TPage, TPages } from './page.types';
+import { TNote, TNotes } from './note.types';
 import type { KeysArray } from '../../common/flattened.types';
 
-const pages = [
+const notes = [
   {
     id: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
+    type: 'note',
+    spaceId: uuidv7(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     section: {
       id: uuidv7(),
       name: 'name',
-      pages: [],
+      notes: [],
       space_id: uuidv7(),
     },
   },
@@ -24,10 +28,14 @@ const pages = [
     id: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
+    type: 'note',
+    spaceId: uuidv7(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     section: {
       id: uuidv7(),
       name: 'name',
-      pages: [],
+      notes: [],
       space_id: uuidv7(),
     },
   },
@@ -35,31 +43,35 @@ const pages = [
     id: uuidv7(),
     name: faker.lorem.paragraph(),
     emoji: faker.internet.emoji(),
+    type: 'note',
+    spaceId: uuidv7(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     section: {
       id: uuidv7(),
       name: 'name',
-      pages: [],
+      notes: [],
       space_id: uuidv7(),
     },
   },
-] satisfies TPages;
+] satisfies TNotes;
 
 type TMeta = {
-  attr?: KeysArray<TPage>;
+  attr?: KeysArray<TNote>;
 };
 
 const validateList = typia.createAssert<TMeta>();
 const validateShow = typia.createAssert<{ id: string } & TMeta>();
 
 @Injectable()
-export class PageTrpcRouter extends BaseRouter {
+export class NoteTrpcRouter extends BaseRouter {
   routes;
 
   constructor(private readonly trpcService: TrpcService) {
     super();
 
     this.routes = {
-      pages: this.trpcService.router({
+      notes: this.trpcService.router({
         list: this.list(),
         show: this.show(),
       }),
@@ -74,19 +86,24 @@ export class PageTrpcRouter extends BaseRouter {
           id: id,
           name: faker.lorem.paragraph(),
           emoji: faker.internet.emoji(),
+          type: 'note',
+          spaceId: uuidv7(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
           section: {
             id: uuidv7(),
             name: 'name',
-            pages: [],
+            notes: [],
             space_id: uuidv7(),
           },
-        } satisfies TPage;
+        } satisfies TNote;
       });
   }
 
   list() {
     return this.trpcService.procedure.input(validateList).query(() => {
-      return pages;
+      return notes;
     });
   }
 }
+

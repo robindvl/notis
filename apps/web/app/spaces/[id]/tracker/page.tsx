@@ -5,11 +5,11 @@ import { useParams } from "next/navigation";
 import { trpc } from "@/shared/api";
 
 export default function Page() {
-  const params = useParams<{ pageId: string }>();
+  const params = useParams<{ noteId: string }>();
 
-  const page = useQuery(
-    trpc.pages.show.queryOptions({ id: params?.pageId || "" })
+  const note = useQuery(
+    trpc.notes.show.queryOptions({ id: params?.noteId || "" })
   );
 
-  return page.data?.name;
+  return note.data?.name;
 }

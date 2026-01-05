@@ -7,8 +7,8 @@ export const ROUTES = {
 
   spaces: {
     index: ({ spaceId }: { spaceId: string }) => `/spaces/${spaceId}`,
-    pages: ({ spaceId, pageId }: { spaceId: string; pageId: string }) =>
-      `/spaces/${spaceId}/pages/${pageId}`,
+    notes: ({ spaceId, noteId }: { spaceId: string; noteId: string }) =>
+      `/spaces/${spaceId}/notes/${noteId}`,
   },
 } as const;
 
