@@ -11,7 +11,7 @@
     "moduleDetection": "force",
 
     /** Keep TSC performant in monorepos */
-    "incremental": true,
+    "incremental": false,
 
     /** Strictness */
     "strict": true,
