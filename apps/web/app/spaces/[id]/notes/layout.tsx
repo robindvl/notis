@@ -17,8 +17,8 @@ export default function NotesLayout({
     trpc.notes.list.queryOptions({})
   );
 
-  console.log(notes.data)
-  
+  console.log(notes)
+
   return (
     <>
       <Sidebar collapsible="none" className="hidden w-80 md:flex border-r">
@@ -35,10 +35,21 @@ export default function NotesLayout({
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {/* Здесь будет список заметок */}
-              <div className="p-4 text-sm text-muted-foreground">
-                Список заметок пуст
-              </div>
+              {notes.data ?
+                notes.data.map(note => (
+                  <div key={note.id} className="flex items-center p-2 hover:bg-muted cursor-pointer">
+                    <span className="flex items-center gap-2 text-sm">
+                      <span>{note.emoji}</span> {note.name}
+                    </span>
+                  </div>
+                ))
+                : notes.isLoading ?
+                  <div className="p-4 text-sm text-muted-foreground">Загрузка...</div>
+                : notes.isError ?
+                  <div className="p-4 text-sm text-destructive">Ошибка загрузки</div>
+                :
+                  <div className="p-4 text-sm text-muted-foreground">Список заметок пуст</div>
+              }
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
