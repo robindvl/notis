@@ -1,0 +1,15 @@
+{
+  "extends": "@repo/typescript-config/nestjs.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      }
+    ],
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "strict": true
+  }
+}
