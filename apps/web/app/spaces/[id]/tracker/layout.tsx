@@ -4,6 +4,7 @@ import React from 'react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarInput, SidebarInset } from "@/components/ui/sidebar"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { SpaceSwitcher } from "@/components/space-switcher"
 
 export default function TrackerLayout({
   children,
@@ -15,9 +16,7 @@ export default function TrackerLayout({
       <Sidebar collapsible="none" className="hidden w-80 md:flex border-r">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
-            <div className="text-base font-medium text-foreground">
-              Трекер
-            </div>
+            <SpaceSwitcher />
             <Label className="flex items-center gap-2 text-sm">
               <span>Unreads</span>
               <Switch className="shadow-none" />
