@@ -1,12 +1,11 @@
-import type { Config } from "tailwindcss";
-
+/** @type {import('tailwindcss').Config} */
 const config = {
     content: [
-        "./apps/web/pages/**/*.{ts,tsx}",
-        "./apps/web/components/**/*.{ts,tsx}",
-        "./apps/web/app/**/*.{ts,tsx}",
-        "./packages/ui/src/components/**/*.{ts,tsx}",
-        "./packages/views/src/components/**/*.{ts,tsx}",
+        "./pages/**/*.{ts,tsx}",
+        "./components/**/*.{ts,tsx}",
+        "./app/**/*.{ts,tsx}",
+        "../../packages/ui/src/components/**/*.{ts,tsx}",
+        "../../packages/views/src/components/**/*.{ts,tsx}",
     ],
     theme: {
         container: {
@@ -84,6 +83,6 @@ const config = {
             },
         },
     },
-} satisfies Config;
+};
 
 export default config;

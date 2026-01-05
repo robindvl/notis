@@ -11,15 +11,20 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
     "@repo/gateway": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-form": "^1.12.4",
     "@tanstack/react-query": "^5.81.5",
     "@trpc/client": "^11.4.3",
     "@trpc/tanstack-react-query": "^11.4.3",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
     "next": "^15.5.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
