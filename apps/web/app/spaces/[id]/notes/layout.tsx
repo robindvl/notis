@@ -7,6 +7,8 @@ import { Switch } from "@/components/ui/switch"
 import { SpaceSwitcher } from "@/components/space-switcher"
 import { trpc } from '@/shared/api';
 import { useQuery } from '@tanstack/react-query';
+import {useParams} from "next/navigation";
+import Link from "next/link";
 
 export default function NotesLayout({
   children,
@@ -16,6 +18,8 @@ export default function NotesLayout({
   const notes = useQuery(
     trpc.notes.list.queryOptions({})
   );
+
+  const params = useParams();
 
   console.log(notes)
 
@@ -37,11 +41,15 @@ export default function NotesLayout({
             <SidebarGroupContent>
               {notes.data ?
                 notes.data.map(note => (
-                  <div key={note.id} className="flex items-center p-2 hover:bg-muted cursor-pointer">
+                  <Link
+                    key={note.id}
+                    href={`/spaces/${params?.id}/notes/${note.id}`}
+                    className="flex items-center p-2 hover:bg-muted cursor-pointer"
+                  >
                     <span className="flex items-center gap-2 text-sm">
                       <span>{note.emoji}</span> {note.name}
                     </span>
-                  </div>
+                  </Link>
                 ))
                 : notes.isLoading ?
                   <div className="p-4 text-sm text-muted-foreground">Загрузка...</div>
