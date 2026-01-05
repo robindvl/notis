@@ -1,5 +1,4 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import { SidebarInset } from "@/components/ui/sidebar"
 
 export default function SpacesLayout({
   children,
@@ -7,11 +6,9 @@ export default function SpacesLayout({
   children: React.ReactNode
 }) {
   return (
-    <>
+    <div className="flex h-svh overflow-hidden w-full">
       <AppSidebar />
-      <SidebarInset>
-        {children}
-      </SidebarInset>
-    </>
+      {children}
+    </div>
   )
 }

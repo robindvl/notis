@@ -14,6 +14,5 @@ export default function Page() {
 
     return <>
         {page.data?.name}
-        <Button>Edit</Button>
     </>;
 }

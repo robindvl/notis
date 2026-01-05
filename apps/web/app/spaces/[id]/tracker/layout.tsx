@@ -5,7 +5,7 @@ import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHead
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 
-export default function NotesLayout({
+export default function TrackerLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -16,7 +16,7 @@ export default function NotesLayout({
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
             <div className="text-base font-medium text-foreground">
-              Заметки
+              Трекер
             </div>
             <Label className="flex items-center gap-2 text-sm">
               <span>Unreads</span>
@@ -28,9 +28,8 @@ export default function NotesLayout({
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {/* Здесь будет список заметок */}
               <div className="p-4 text-sm text-muted-foreground">
-                Список заметок пуст
+                Список задач пуст
               </div>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -42,3 +41,4 @@ export default function NotesLayout({
     </>
   );
 }
+
