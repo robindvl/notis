@@ -3,7 +3,7 @@ import { UserRepository } from '@repo/domain';
 
 import { UserTrpcRouter } from './user.trpc';
 import { UserService } from './user.service';
-import { UserRepositoryMock } from './repositories/user.repository.mock';
+import { UserRepositoryRemote } from './repositories/user.repository.remote';
 
 @Module({
   providers: [
@@ -11,7 +11,7 @@ import { UserRepositoryMock } from './repositories/user.repository.mock';
     UserService,
     {
       provide: UserRepository,
-      useClass: UserRepositoryMock,
+      useClass: UserRepositoryRemote,
     },
   ],
   exports: [UserService, UserTrpcRouter],

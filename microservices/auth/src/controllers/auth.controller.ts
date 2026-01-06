@@ -2,22 +2,28 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { AUTH_TOKEN_MAX_AGE } from '@repo/domain';
+import { userRepository } from '../repositories/user.repository';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key';
 
-// In a real app, you'd use a database.
-const users: any[] = [];
-
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, login } = req.body;
+    if (!email || !password || !name) {
+      return res.status(400).json({ message: 'Email, password and name are required' });
+    }
     console.log('[AuthService] Registering user:', email);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { id: Date.now().toString(), email, password: hashedPassword, name };
-    users.push(user);
     
-    console.log('[AuthService] User registered successfully. Total users:', users.length);
-    const { password: _, ...userWithoutPassword } = user;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const user = await userRepository.create({ 
+      email, 
+      password: hashedPassword, 
+      name,
+      login: login || email.split('@')[0]
+    } as any);
+    
+    const { password: _, ...userWithoutPassword }: any = user;
     res.status(201).json(userWithoutPassword);
   } catch (error) {
     console.error('[AuthService] Registration error:', error);
@@ -28,18 +34,21 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const user = users.find(u => u.email === email);
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+    const user: any = await userRepository.findByEmail(email);
     
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
-    console.log('[AuthService] Generating token with max age:', AUTH_TOKEN_MAX_AGE);
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: AUTH_TOKEN_MAX_AGE });
     
     const { password: _, ...userWithoutPassword } = user;
     res.json({ user: userWithoutPassword, token });
   } catch (error) {
+    console.error('[AuthService] Login error:', error);
     res.status(500).json({ message: 'Error logging in' });
   }
 };
@@ -48,13 +57,11 @@ export const validate = async (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(' ')[1];
   
   if (!token) {
-    console.log('[AuthService] No token provided');
     return res.status(401).json({ message: 'No token provided' });
   }
   
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log('[AuthService] Token validated successfully for user:', (decoded as any).userId);
     res.json({ valid: true, user: decoded });
   } catch (error) {
     console.error('[AuthService] Token validation failed:', error instanceof Error ? error.message : error);
