@@ -20,6 +20,22 @@ export const trpcClient = createTRPCClient<AppRouter>({
     httpBatchLink({
       url: `${process.env.NEXT_PUBLIC_NESTJS_SERVER}/trpc`,
       transformer: superjson,
+      headers() {
+        if (typeof window !== 'undefined') {
+          const token = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('token='))
+            ?.split('=')[1];
+          if (token) return { Authorization: `Bearer ${token}` };
+        }
+        return {};
+      },
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: 'include', // Позволяет отправлять HttpOnly куки на другой домен (Gateway)
+        });
+      },
     }),
   ],
 });

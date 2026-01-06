@@ -26,7 +26,7 @@ export class SpaceTrpcRouter extends BaseRouter {
   }
 
   show() {
-    return this.trpcService.procedure
+    return this.trpcService.protectedProcedure
       .input(validateShow)
       .query(async ({ input: { id } }) => {
         return this.spaceService.findById(id);
@@ -34,7 +34,7 @@ export class SpaceTrpcRouter extends BaseRouter {
   }
 
   list() {
-    return this.trpcService.procedure.query(async () => {
+    return this.trpcService.protectedProcedure.query(async () => {
       return this.spaceService.list();
     });
   }

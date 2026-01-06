@@ -33,7 +33,7 @@ export class NoteTrpcRouter extends BaseRouter {
   }
 
   show() {
-    return this.trpcService.procedure
+    return this.trpcService.protectedProcedure
       .input(validateShow)
       .query(async ({ input: { id } }) => {
         return this.noteService.findById(id);
@@ -41,7 +41,8 @@ export class NoteTrpcRouter extends BaseRouter {
   }
 
   list() {
-    return this.trpcService.procedure.input(validateList).query(async ({ input }) => {
+    return this.trpcService.protectedProcedure.input(validateList).query(async ({ input, ctx }) => {
+      // ctx.user contains the validated user info
       return this.noteService.list(input.spaceId);
     });
   }

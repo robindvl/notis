@@ -16,7 +16,7 @@
     /** Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "checkJs": true,
+    "checkJs": false,
 
     "module": "NodeNext",
     "moduleResolution": "NodeNext",

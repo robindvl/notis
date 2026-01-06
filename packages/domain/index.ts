@@ -1,6 +1,7 @@
 // Auth
 export * from './auth/entities/user';
 export * from './auth/entities/role';
+export * from './auth/constants';
 
 export * from './auth/repositories/user.repository';
 export * from './auth/repositories/role.repository';

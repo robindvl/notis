@@ -9,10 +9,12 @@ import { SpaceModule } from './modules/space/space.module';
 import { NoteModule } from './modules/note/note.module';
 import { ProjectModule } from './modules/project/project.module';
 import { TaskModule } from './modules/task/task.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    AuthModule,
     TrpcModule,
     UserModule,
     SpaceModule,

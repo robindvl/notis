@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import {ReactQueryProvider} from "@/app/providers";
 import {SidebarProvider} from "@/components/ui/sidebar";
+import { Toaster } from "sonner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +30,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           <SidebarProvider>
             {children}
+            <Toaster position="top-center" />
           </SidebarProvider>
         </ReactQueryProvider>
       </body>

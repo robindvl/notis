@@ -29,19 +29,19 @@ export class UserTrpcRouter extends BaseRouter {
 
     this.routes = {
       users: this.trpcService.router({
-        create: this.trpcService.procedure
+        create: this.trpcService.protectedProcedure
           .input(UserCreateSchema)
           .mutation(async ({ input }) => {
             return this.userService.create(input);
           }),
 
-        show: this.trpcService.procedure
+        show: this.trpcService.protectedProcedure
           .input(validateShow)
           .query(async ({ input }) => {
             return this.userService.findById(input.id);
           }),
 
-        list: this.trpcService.procedure
+        list: this.trpcService.protectedProcedure
           .input(validateMeta)
           .query(async ({ input }) => {
             return this.userService.list(input.page, input.size);

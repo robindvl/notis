@@ -6,13 +6,20 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import fastifyCookie from '@fastify/cookie';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
   );
-  app.enableCors();
+  
+  app.register(fastifyCookie);
+  
+  app.enableCors({
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+    credentials: true,
+  });
 
   const trpc = app.get(TrpcRouter);
   trpc.applyMiddleware(app);
@@ -20,15 +27,3 @@ async function bootstrap() {
   await app.listen(process.env.PORT || 5000);
 }
 bootstrap();
-
-// **Express**
-// async function bootstrap() {
-//   const app = await NestFactory.create(AppModule);
-//   app.enableCors();
-
-//   const trpc = app.get(TrpcRouter);
-//   trpc.applyMiddleware(app);
-
-//   await app.listen(process.env.PORT || 5000);
-// }
-// bootstrap();
