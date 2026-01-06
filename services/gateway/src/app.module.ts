@@ -7,6 +7,7 @@ import { TrpcModule } from './processors/trpc/trpc.module';
 import { UserModule } from './modules/user/user.module';
 import { SpaceModule } from './modules/space/space.module';
 import { NoteModule } from './modules/note/note.module';
+import { ProjectModule } from './modules/project/project.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { NoteModule } from './modules/note/note.module';
     UserModule,
     SpaceModule,
     NoteModule,
+    ProjectModule
   ],
   controllers: [AppController],
   providers: [AppService],

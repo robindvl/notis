@@ -11,3 +11,13 @@ export * from './core/entities/note';
 
 export * from './core/repositories/space.repository';
 export * from './core/repositories/note.repository';
+
+// Task
+export * from './task/entities/project';
+export * from './task/entities/status';
+export * from './task/entities/task';
+
+export * from './task/repositories/project.repository';
+export * from './task/repositories/status.repository';
+export * from './task/repositories/task.repository';
+

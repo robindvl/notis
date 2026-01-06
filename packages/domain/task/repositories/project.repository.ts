@@ -1,10 +1,10 @@
 import { Project } from '../entities/project';
 
-export interface ProjectRepository {
-  findById(id: string): Promise<Project | null>;
-  findByOwnerId(ownerId: string): Promise<Project[]>;
-  create(project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<Project>;
-  update(id: string, project: Partial<Project>): Promise<Project>;
-  delete(id: string): Promise<void>;
+export abstract class ProjectRepository {
+  abstract findById(id: string): Promise<Project | null>;
+  abstract findByOwnerId(ownerId: string): Promise<Project[]>;
+  abstract create(project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<Project>;
+  abstract update(id: string, project: Partial<Project>): Promise<Project>;
+  abstract delete(id: string): Promise<void>;
 }
 

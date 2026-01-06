@@ -7,6 +7,7 @@ import { TrpcService } from './trpc.service';
 import { UserTrpcRouter } from '../../modules/user/user.trpc';
 import { SpaceTrpcRouter } from '../../modules/space/space.trpc';
 import { NoteTrpcRouter } from '../../modules/note/note.trpc';
+import { ProjectTrpcRouter } from '../../modules/project/project.trpc';
 
 @Injectable()
 export class TrpcRouter {
@@ -17,11 +18,13 @@ export class TrpcRouter {
     private readonly userRouter: UserTrpcRouter,
     private readonly spaceRouter: SpaceTrpcRouter,
     private readonly noteRouter: NoteTrpcRouter,
+    private readonly projectRouter: ProjectTrpcRouter,
   ) {
     this.appRouter = this.trpc.router({
       ...this.userRouter.routes,
       ...this.spaceRouter.routes,
       ...this.noteRouter.routes,
+      ...this.projectRouter.routes,
     });
   }
 
