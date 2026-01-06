@@ -1,48 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { z } from 'zod';
+import typia from 'typia';
+import type { LoginDto, RegisterDto } from '@repo/domain';
+
 import { TrpcService } from '../../processors/trpc/trpc.service';
+import { BaseRouter } from '../../common/base-router';
 import { AuthService } from './auth.service';
 
+const validateLogin = typia.createAssert<LoginDto>();
+const validateRegister = typia.createAssert<RegisterDto>();
+
 @Injectable()
-export class AuthTrpcRouter {
+export class AuthTrpcRouter extends BaseRouter {
   routes;
 
   constructor(
-    private readonly trpc: TrpcService,
+    private readonly trpcService: TrpcService,
     private readonly authService: AuthService,
   ) {
+    super();
+
     this.routes = {
-      auth: this.trpc.router({
-        login: this.trpc.procedure
-          .input(z.object({ email: z.string(), password: z.string() }))
-          .mutation(async ({ input }) => {
-            const response = await fetch(`${process.env.AUTH_SERVICE_URL || 'http://localhost:5001/auth'}/login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(input),
-            });
-            if (!response.ok) {
-              const error = (await response.json()) as { message?: string };
-              throw new Error(error.message || 'Login failed');
-            }
-            return response.json();
-          }),
-        register: this.trpc.procedure
-          .input(z.object({ email: z.string(), password: z.string(), name: z.string() }))
-          .mutation(async ({ input }) => {
-            const response = await fetch(`${process.env.AUTH_SERVICE_URL || 'http://localhost:5001/auth'}/register`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(input),
-            });
-            if (!response.ok) {
-              const error = (await response.json()) as { message?: string };
-              throw new Error(error.message || 'Registration failed');
-            }
-            return response.json();
-          }),
+      auth: this.trpcService.router({
+        login: this.login(),
+        register: this.register(),
       }),
     };
   }
-}
 
+  login() {
+    return this.trpcService.procedure
+      .input(validateLogin)
+      .mutation(async ({ input }) => {
+        return this.authService.login(input);
+      });
+  }
+
+  register() {
+    return this.trpcService.procedure
+      .input(validateRegister)
+      .mutation(async ({ input }) => {
+        return this.authService.register(input);
+      });
+  }
+}

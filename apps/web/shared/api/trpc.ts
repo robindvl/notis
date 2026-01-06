@@ -33,7 +33,7 @@ export const trpcClient = createTRPCClient<AppRouter>({
       fetch(url, options) {
         return fetch(url, {
           ...options,
-          credentials: 'include', // Позволяет отправлять HttpOnly куки на другой домен (Gateway)
+          credentials: 'include',
         });
       },
     }),

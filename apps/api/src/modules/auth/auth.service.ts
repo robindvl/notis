@@ -1,29 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { AuthRepository, LoginDto, RegisterDto, AuthResponseDto, User } from '@repo/domain';
 
 @Injectable()
 export class AuthService {
-  private readonly authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:5001/auth';
+  constructor(private readonly authRepository: AuthRepository) {}
 
-  async validateToken(token: string) {
-    try {
-      const response = await fetch(`${this.authServiceUrl}/validate`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  async validateToken(token: string): Promise<User | null> {
+    return this.authRepository.validateToken(token);
+  }
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[Gateway] Auth validation failed with status ${response.status}: ${errorText}`);
-        return null;
-      }
+  async login(input: LoginDto): Promise<AuthResponseDto> {
+    return this.authRepository.login(input);
+  }
 
-      const data = (await response.json()) as { user: any };
-      return data.user;
-    } catch (error) {
-      console.error('Error validating token:', error);
-      return null;
-    }
+  async register(input: RegisterDto): Promise<AuthResponseDto> {
+    return this.authRepository.register(input);
   }
 }
-

@@ -6,19 +6,16 @@ import { BaseRouter } from '../../common/base-router';
 import { 
   Task, 
   CreateTaskDto, 
-  UpdateTaskDto
+  UpdateTaskDto,
+  IdDto,
+  AttrMetaDto
 } from '@repo/domain';
 import { TaskService } from './task.service';
-import type { KeysArray } from '../../common/flattened.types';
 
-type TMeta = {
-  attr?: KeysArray<Task>;
-};
-
-const validateList = typia.createAssert<{ projectId: string } & TMeta>();
-const validateShow = typia.createAssert<{ id: string } & TMeta>();
+const validateList = typia.createAssert<{ projectId: string } & AttrMetaDto<Task>>();
+const validateShow = typia.createAssert<IdDto & AttrMetaDto<Task>>();
 const validateCreate = typia.createAssert<CreateTaskDto>();
-const validateUpdate = typia.createAssert<{ id: string } & UpdateTaskDto>();
+const validateUpdate = typia.createAssert<IdDto & UpdateTaskDto>();
 
 @Injectable()
 export class TaskTrpcRouter extends BaseRouter {
@@ -67,4 +64,3 @@ export class TaskTrpcRouter extends BaseRouter {
     });
   }
 }
-

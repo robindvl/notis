@@ -6,19 +6,16 @@ import { BaseRouter } from '../../common/base-router';
 import { 
   Project, 
   CreateProjectDto, 
-  UpdateProjectDto
+  UpdateProjectDto,
+  IdDto,
+  AttrMetaDto
 } from '@repo/domain';
 import { ProjectService } from './project.service';
-import type { KeysArray } from '../../common/flattened.types';
 
-type TMeta = {
-  attr?: KeysArray<Project>;
-};
-
-const validateList = typia.createAssert<{ spaceId: string } & TMeta>();
-const validateShow = typia.createAssert<{ id: string } & TMeta>();
+const validateList = typia.createAssert<{ spaceId: string } & AttrMetaDto<Project>>();
+const validateShow = typia.createAssert<IdDto & AttrMetaDto<Project>>();
 const validateCreate = typia.createAssert<CreateProjectDto>();
-const validateUpdate = typia.createAssert<{ id: string } & UpdateProjectDto>();
+const validateUpdate = typia.createAssert<IdDto & UpdateProjectDto>();
 
 @Injectable()
 export class ProjectTrpcRouter extends BaseRouter {
@@ -67,4 +64,3 @@ export class ProjectTrpcRouter extends BaseRouter {
     });
   }
 }
-

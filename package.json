@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "notis-turborepo",
   "private": true,
   "scripts": {
     "openapi:generate": "turbo run openapi:generate --filter=content",

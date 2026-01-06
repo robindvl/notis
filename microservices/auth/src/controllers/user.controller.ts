@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { userRepository } from '../repositories/user.repository';
 
 export const list = async (req: Request, res: Response) => {

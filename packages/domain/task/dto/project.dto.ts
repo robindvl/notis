@@ -2,7 +2,14 @@
  * DTO for creating a new project
  */
 export interface CreateProjectDto {
+  /**
+   * @minLength 3
+   * @maxLength 100
+   */
   name: string;
+  /**
+   * @maxLength 500
+   */
   description?: string;
   spaceId: string;
 }
@@ -11,7 +18,14 @@ export interface CreateProjectDto {
  * DTO for updating an existing project
  */
 export interface UpdateProjectDto {
+  /**
+   * @minLength 3
+   * @maxLength 100
+   */
   name?: string;
+  /**
+   * @maxLength 500
+   */
   description?: string;
 }
 
@@ -27,4 +41,3 @@ export interface ProjectResponseDto {
   updatedAt: Date;
   taskCount?: number;
 }
-

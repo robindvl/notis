@@ -2,13 +2,17 @@
 export * from './auth/entities/user';
 export * from './auth/entities/role';
 export * from './auth/constants';
+export * from './auth/dto/auth.dto';
 
 export * from './auth/repositories/user.repository';
 export * from './auth/repositories/role.repository';
+export * from './auth/repositories/auth.repository';
 
 // Core
 export * from './core/entities/space';
 export * from './core/entities/note';
+export * from './core/dto/common.dto';
+export * from './core/types/query.types';
 
 export * from './core/repositories/space.repository';
 export * from './core/repositories/note.repository';

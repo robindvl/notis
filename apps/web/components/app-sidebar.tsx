@@ -1,11 +1,13 @@
 "use client"
 
-import * as React from "react"
+import { useMemo, type ComponentProps } from "react"
 import { Command, MessageSquare, StickyNote, Target } from "lucide-react"
 import { useParams, usePathname } from "next/navigation"
 import Link from "next/link"
+import { useQuery } from "@tanstack/react-query"
 
 import { NavUser } from "@/components/nav-user"
+import { trpc } from "@/shared/api/trpc"
 import {
   Sidebar,
   SidebarContent,
@@ -18,20 +20,14 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-}
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const params = useParams()
   const pathname = usePathname()
   const id = params?.id as string
+
+  const { data: user } = useQuery(trpc.users.me.queryOptions())
   
-  const navMain = React.useMemo(() => [
+  const navMain = useMemo(() => [
     {
       title: "Заметки",
       url: `/spaces/${id}/notes`,
@@ -48,6 +44,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: MessageSquare,
     },
   ], [id])
+
+  const userData = useMemo(() => {
+    return {
+      name: user?.name || "Loading...",
+      email: user?.email || "...",
+      avatar: "",
+    }
+  }, [user])
 
   return (
     <Sidebar
@@ -95,7 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
   )

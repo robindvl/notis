@@ -2,7 +2,14 @@
  * DTO for creating a new task
  */
 export interface CreateTaskDto {
+  /**
+   * @minLength 3
+   * @maxLength 255
+   */
   title: string;
+  /**
+   * @maxLength 2000
+   */
   description?: string;
   statusId: string;
   projectId: string;
@@ -13,7 +20,14 @@ export interface CreateTaskDto {
  * DTO for updating an existing task
  */
 export interface UpdateTaskDto {
+  /**
+   * @minLength 3
+   * @maxLength 255
+   */
   title?: string;
+  /**
+   * @maxLength 2000
+   */
   description?: string;
   statusId?: string;
   assigneeId?: string;
@@ -33,4 +47,3 @@ export interface TaskResponseDto {
   updatedAt: Date;
   isOverdue?: boolean;
 }
-

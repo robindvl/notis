@@ -4,8 +4,9 @@ import typia from 'typia';
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
 import { SpaceService } from './space.service';
+import { IdDto } from '@repo/domain';
 
-const validateShow = typia.createAssert<{ id: string }>();
+const validateShow = typia.createAssert<IdDto>();
 
 @Injectable()
 export class SpaceTrpcRouter extends BaseRouter {

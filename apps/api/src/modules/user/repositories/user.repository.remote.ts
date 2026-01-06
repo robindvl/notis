@@ -3,7 +3,7 @@ import { User, UserRepository } from '@repo/domain';
 
 @Injectable()
 export class UserRepositoryRemote extends UserRepository {
-  private readonly authBaseUrl = (process.env.AUTH_SERVICE_URL || 'http://localhost:5001/auth').replace(/\/auth$/, '');
+  private readonly authBaseUrl = (process.env.AUTH_SERVICE_URL || 'http://127.0.0.1:5001/auth').replace(/\/auth$/, '');
 
   async findAll(): Promise<User[]> {
     try {
