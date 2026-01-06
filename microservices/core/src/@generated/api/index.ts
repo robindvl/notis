@@ -1,2 +1,2 @@
-export * from './BlocksApi';
-export * from './SpacesApi';
+export * from './NoteApi';
+export * from './SpaceApi';

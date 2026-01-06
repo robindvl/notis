@@ -1,23 +1,22 @@
 openapi: 3.0.3
 info:
-  title: microservices/content
-  description: "API by microservices/content"
+  title: microservices/core
+  description: "API for core microservice handling spaces and notes"
   version: 0.0.1
 
 tags:
-  - name: spaces
+  - name: space
     description: Рабочие пространства
-  - name: blocks
-    description: Контент для заметок, секции, страницы, абзацы и т.п.
+  - name: note
+    description: Заметки и контент
 
 paths:
-  /spaces:
+  /space:
     get:
       tags:
-        - spaces
+        - space
       summary: Получить список рабочих пространств
       operationId: getSpaces
-      description: Получить список рабочих пространств
       responses:
         '200':
           description: Успешный ответ
@@ -27,10 +26,9 @@ paths:
                 $ref: '#/components/schemas/SpaceList'
     post:
       tags:
-        - spaces
+        - space
       summary: Создать рабочее пространство
       operationId: createSpace
-      description: Создать рабочее пространство
       requestBody:
         content:
           application/json:
@@ -44,20 +42,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/Space'
 
-  /spaces/{id}:
+  /space/{id}:
     parameters:
       - in: path
         name: id
         required: true
         schema:
-          type: integer
+          type: string
         description: Уникальный идентификатор пространства
     get:
       tags:
-        - spaces
+        - space
       summary: Получить рабочее пространство
       operationId: getSpace
-      description: Получить рабочее пространство
       responses:
         '200':
           description: Успешный ответ
@@ -65,13 +62,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Space'
-
     put:
       tags:
-        - spaces
+        - space
       summary: Обновить рабочее пространство
       operationId: updateSpace
-      description: Сохранить изменения рабочего пространства
       requestBody:
         content:
           application/json:
@@ -84,80 +79,110 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Space'
+    delete:
+      tags:
+        - space
+      summary: Удалить рабочее пространство
+      operationId: deleteSpace
+      responses:
+        '204':
+          description: Успешно удалено
 
-  /blocks:
+  /note:
     get:
       tags:
-        - blocks
-      summary: Получить список блоков контента
-      operationId: getBlocks
-      description: Получить список блоков контента
+        - note
+      summary: Получить список заметок
+      operationId: getNotes
+      parameters:
+        - in: query
+          name: spaceId
+          required: false
+          schema:
+            type: string
+          description: ID пространства
+        - in: query
+          name: sectionId
+          required: false
+          schema:
+            type: string
+          description: ID раздела
+        - in: query
+          name: parentId
+          required: false
+          schema:
+            type: string
+          description: ID родителя
       responses:
         '200':
           description: Успешный ответ
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BlockList'
+                $ref: '#/components/schemas/NoteList'
     post:
       tags:
-        - blocks
-      summary: Создать блок контента
-      operationId: createBlock
-      description: Создать страницу
+        - note
+      summary: Создать заметку
+      operationId: createNote
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BlockCreate'
+              $ref: '#/components/schemas/NoteCreate'
       responses:
         '201':
           description: Успешно создано
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Block'
+                $ref: '#/components/schemas/Note'
 
-  /blocks/{id}:
+  /note/{id}:
     parameters:
       - in: path
         name: id
         required: true
         schema:
-          type: integer
-        description: Уникальный идентификатор блока
+          type: string
+        description: Уникальный идентификатор заметки
     get:
       tags:
-        - blocks
-      summary: Получить блок контента
-      operationId: getBlock
-      description: Получить блок контента
+        - note
+      summary: Получить заметку
+      operationId: getNote
       responses:
         '200':
           description: Успешный ответ
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Block'
-                
+                $ref: '#/components/schemas/Note'
     put:
       tags:
-        - blocks
-      summary: Обновить блок контента
-      operationId: updateBlock
-      description: Отправить на сохранение изменения контента
+        - note
+      summary: Обновить заметку
+      operationId: updateNote
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BlockUpdate'
+              $ref: '#/components/schemas/NoteUpdate'
       responses:
         '200':
           description: Успешно обновлено
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Block'
+                $ref: '#/components/schemas/Note'
+    delete:
+      tags:
+        - note
+      summary: Удалить заметку
+      operationId: deleteNote
+      responses:
+        '204':
+          description: Успешно удалено
 
 components:
   schemas:
@@ -168,71 +193,100 @@ components:
 
     Space:
       type: object
+      required: [id, name, createdAt]
       properties:
         id:
-          type: integer
+          type: string
         name:
           type: string
-        owner_user_id:
-          type: integer
+        img:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
 
     SpaceCreate:
       type: object
+      required: [name]
       properties:
         name:
           type: string
-        owner_user_id:
-          type: integer
+        img:
+          type: string
 
     SpaceUpdate:
       type: object
       properties:
         name:
           type: string
+        img:
+          type: string
 
-    BlockList:
+    NoteList:
       type: array
       items:
-        $ref: '#/components/schemas/Block'
+        $ref: '#/components/schemas/Note'
 
-    Block:
+    Note:
       type: object
+      required: [id, title, type, spaceId, createdAt, updatedAt]
       properties:
         id:
-          type: integer
-        name:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        emoji:
           type: string
         type:
           type: string
-          enum:
-            - section
-            - page
-            - paragraph
-        parent_id:
-          type: integer
-        body:
+          enum: [note, section, paragraph, note_task]
+        parentId:
           type: string
-        blocks:
-          type: array
-          items:
-            $ref: '#/components/schemas/Block'
+        sectionId:
+          type: string
+        spaceId:
+          type: string
+        content:
+          type: object
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
-    BlockCreate:
+    NoteCreate:
       type: object
+      required: [title, type, spaceId]
       properties:
-        name:
+        title:
+          type: string
+        body:
+          type: string
+        emoji:
           type: string
         type:
           type: string
-        body:
+          enum: [note, section, paragraph, note_task]
+        parentId:
           type: string
-        parent_id:
-          type: integer
-  
-    BlockUpdate:
+        sectionId:
+          type: string
+        spaceId:
+          type: string
+        content:
+          type: object
+
+    NoteUpdate:
       type: object
       properties:
-        name:
+        title:
           type: string
         body:
           type: string
+        emoji:
+          type: string
+        content:
+          type: object

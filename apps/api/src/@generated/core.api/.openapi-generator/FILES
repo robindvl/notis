@@ -1,0 +1,13 @@
+.openapi-generator-ignore
+apis/NoteApi.ts
+apis/SpaceApi.ts
+apis/index.ts
+index.ts
+models/Note.ts
+models/NoteCreate.ts
+models/NoteUpdate.ts
+models/Space.ts
+models/SpaceCreate.ts
+models/SpaceUpdate.ts
+models/index.ts
+runtime.ts

@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
-import { SpaceRepository } from './repositories/space.abstract';
-import { SpacesMockRepository } from './repositories/space.mock';
+import { SpaceRepository } from '@repo/domain';
+import { SpaceRepositoryMock } from './repositories/space.repository.mock';
+import { SpaceService } from './space.service';
 
 @Module({
   providers: [
+    SpaceService,
     {
       provide: SpaceRepository,
-      useClass: SpacesMockRepository,
+      useClass: SpaceRepositoryMock,
     },
   ],
-  exports: [SpaceRepository],
+  exports: [SpaceService, SpaceRepository],
 })
-export class SpacesModule {}
+export class SpaceModule {}

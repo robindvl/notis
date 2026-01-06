@@ -2,19 +2,19 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApiModule } from './api.module';
-import { SpacesService } from './modules/space/space.service';
-import { BlocksService } from './modules/block/block.service';
-import { BlocksModule } from './modules/block/block.module';
-import { SpacesModule } from './modules/space/space.module';
+import { SpaceService } from './modules/space/space.service';
+import { NoteService } from './modules/note/note.service';
+import { SpaceModule } from './modules/space/space.module';
+import { NoteModule } from './modules/note/note.module';
 
 @Module({
   imports: [
     ApiModule.forRoot(
       {
-        spacesApi: SpacesService,
-        blocksApi: BlocksService,
+        spaceApi: SpaceService,
+        noteApi: NoteService,
       },
-      { modules: [BlocksModule, SpacesModule] },
+      { modules: [SpaceModule, NoteModule] },
     ),
   ],
   controllers: [AppController],

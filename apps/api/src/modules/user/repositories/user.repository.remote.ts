@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserRepository } from '@repo/domain';
+import { User, UserRepository, USER_ROUTES, AUTH_ROUTES } from '@repo/domain';
 
 @Injectable()
 export class UserRepositoryRemote extends UserRepository {
@@ -7,7 +7,7 @@ export class UserRepositoryRemote extends UserRepository {
 
   async findAll(): Promise<User[]> {
     try {
-      const response = await fetch(`${this.authBaseUrl}/users`);
+      const response = await fetch(`${this.authBaseUrl}${USER_ROUTES.BASE}`);
       if (!response.ok) return [];
       return await response.json() as User[];
     } catch (error) {
@@ -18,7 +18,8 @@ export class UserRepositoryRemote extends UserRepository {
 
   async findById(id: string): Promise<User | null> {
     try {
-      const response = await fetch(`${this.authBaseUrl}/users/${id}`);
+      const url = `${this.authBaseUrl}${USER_ROUTES.BY_ID.replace(':id', id)}`;
+      const response = await fetch(url);
       if (!response.ok) return null;
       return await response.json() as User;
     } catch (error) {
@@ -35,7 +36,7 @@ export class UserRepositoryRemote extends UserRepository {
 
   async create(user: Omit<User, 'id'>): Promise<User> {
     try {
-      const response = await fetch(`${this.authBaseUrl}/auth/register`, {
+      const response = await fetch(`${this.authBaseUrl}${AUTH_ROUTES.REGISTER}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
@@ -52,7 +53,8 @@ export class UserRepositoryRemote extends UserRepository {
 
   async update(id: string, user: Partial<User>): Promise<User> {
     try {
-      const response = await fetch(`${this.authBaseUrl}/users/${id}`, {
+      const url = `${this.authBaseUrl}${USER_ROUTES.BY_ID.replace(':id', id)}`;
+      const response = await fetch(url, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
@@ -67,7 +69,8 @@ export class UserRepositoryRemote extends UserRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      const response = await fetch(`${this.authBaseUrl}/users/${id}`, {
+      const url = `${this.authBaseUrl}${USER_ROUTES.BY_ID.replace(':id', id)}`;
+      const response = await fetch(url, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Failed to delete user');

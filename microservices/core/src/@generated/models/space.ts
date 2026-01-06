@@ -1,8 +1,9 @@
 
 
 export interface Space { 
-  id?: number;
-  name?: string;
-  owner_user_id?: number;
+  id: string;
+  name: string;
+  img?: string;
+  createdAt: string;
 }
 

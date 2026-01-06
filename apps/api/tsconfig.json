@@ -13,7 +13,8 @@
     ],
     "skipLibCheck": true,
     "strictNullChecks": true,
-    "strict": true
+    "strict": true,
+    "lib": ["dom", "esnext"]
   },
   "exclude": ["node_modules", "dist", "eslint.config.mjs"]
 }

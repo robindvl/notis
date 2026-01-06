@@ -12,7 +12,7 @@ const app: Express = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
+app.use(authRoutes);
+app.use(userRoutes);
 
 export default app;

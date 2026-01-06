@@ -1,2 +1,2 @@
-export * from './BlocksApi.controller';
-export * from './SpacesApi.controller';
+export * from './NoteApi.controller';
+export * from './SpaceApi.controller';

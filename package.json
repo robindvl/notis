@@ -2,7 +2,7 @@
   "name": "notis-turborepo",
   "private": true,
   "scripts": {
-    "openapi:generate": "turbo run openapi:generate --filter=content",
+    "openapi:generate": "turbo run openapi:generate --filter=@repo/ms-core",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",

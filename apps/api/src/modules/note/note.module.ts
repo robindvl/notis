@@ -3,7 +3,7 @@ import { NoteRepository } from '@repo/domain';
 
 import { NoteTrpcRouter } from './note.trpc';
 import { NoteService } from './note.service';
-import { NoteRepositoryMock } from './repositories/note.repository.mock';
+import { NoteRepositoryRemote } from './repositories/note.repository.remote';
 
 @Module({
   providers: [
@@ -11,7 +11,7 @@ import { NoteRepositoryMock } from './repositories/note.repository.mock';
     NoteService,
     {
       provide: NoteRepository,
-      useClass: NoteRepositoryMock,
+      useClass: NoteRepositoryRemote,
     },
   ],
   exports: [NoteService, NoteTrpcRouter],

@@ -53,7 +53,15 @@ export class TrpcRouter {
           if (authHeader && authHeader.startsWith('Bearer ')) {
             const token = authHeader.split(' ')[1];
             const user = await this.authService.validateToken(token);
-            return { user };
+            if (!user) {
+              return { user: undefined };
+            }
+            return {
+              user: {
+                userId: user.id,
+                email: user.email,
+              },
+            };
           }
           
           return { user: undefined };

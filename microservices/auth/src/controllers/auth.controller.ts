@@ -17,7 +17,12 @@ export const register = async (req: Request, res: Response) => {
   try {
     const { email, password, name, login } = req.body as RegisterDto;
     if (!email || !password || !name) {
-      return res.status(400).json({ message: 'Email, password and name are required' });
+      return res.status(400).json({ message: 'Требуется указать адрес электронной почты, пароль и имя пользователя' });
+    }
+
+    const existingUser = await userRepository.findByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: 'Пользователь с таким email уже существует' });
     }
     
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,7 +46,7 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body as LoginDto;
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+      return res.status(400).json({ message: 'Требуется указать адрес электронной почты и пароль' });
     }
     const user = await userRepository.findByEmail(email) as UserWithPassword | null;
     

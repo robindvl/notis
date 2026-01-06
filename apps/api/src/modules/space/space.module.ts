@@ -3,7 +3,7 @@ import { SpaceRepository } from '@repo/domain';
 
 import { SpaceTrpcRouter } from './space.trpc';
 import { SpaceService } from './space.service';
-import { SpaceRepositoryMock } from './repositories/space.repository.mock';
+import { SpaceRepositoryRemote } from './repositories/space.repository.remote';
 
 @Module({
   providers: [
@@ -11,7 +11,7 @@ import { SpaceRepositoryMock } from './repositories/space.repository.mock';
     SpaceService,
     {
       provide: SpaceRepository,
-      useClass: SpaceRepositoryMock,
+      useClass: SpaceRepositoryRemote,
     },
   ],
   exports: [SpaceService, SpaceTrpcRouter],
