@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import {ReactQueryProvider} from "@/app/providers";
+import {ReactQueryProvider, ThemeProvider} from "@/app/providers";
 import {SidebarProvider} from "@/components/ui/sidebar";
 import { Toaster } from "sonner";
 
@@ -25,13 +25,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ReactQueryProvider>
-          <SidebarProvider>
-            {children}
-            <Toaster position="top-center" />
-          </SidebarProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SidebarProvider>
+              {children}
+              <Toaster position="top-center" />
+            </SidebarProvider>
+          </ThemeProvider>
         </ReactQueryProvider>
       </body>
     </html>

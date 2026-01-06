@@ -6,10 +6,13 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  Moon,
   Sparkles,
+  Sun,
 } from "lucide-react"
 import { deleteSession } from "@/app/auth-actions"
 import { useRouter } from "next/navigation"
+import { useTheme } from "next-themes"
 
 import {
   Avatar,
@@ -43,6 +46,7 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const router = useRouter()
+  const { setTheme, resolvedTheme } = useTheme()
 
   const initials = user.name
     ?.split(" ")
@@ -118,6 +122,23 @@ export function NavUser({
               <DropdownMenuItem>
                 <Bell />
                 Notifications
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              >
+                {resolvedTheme === "dark" ? (
+                  <>
+                    <Sun />
+                    <span>Light Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon />
+                    <span>Dark Mode</span>
+                  </>
+                )}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
