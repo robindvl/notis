@@ -2,6 +2,7 @@ import { httpBatchLink, createTRPCClient } from "@trpc/client";
 
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { QueryClient } from "@tanstack/react-query";
+import superjson from 'superjson';
 
 import type { AppRouter } from "@repo/gateway/src/processors/trpc/trpc.router";
 
@@ -18,6 +19,7 @@ export const trpcClient = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       url: `${process.env.NEXT_PUBLIC_NESTJS_SERVER}/trpc`,
+      transformer: superjson,
     }),
   ],
 });

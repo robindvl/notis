@@ -3,16 +3,22 @@ import typia from 'typia';
 
 import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
+import { 
+  Project, 
+  CreateProjectDto, 
+  UpdateProjectDto
+} from '@repo/domain';
 import { ProjectService } from './project.service';
-import { TProject } from './project.types';
 import type { KeysArray } from '../../common/flattened.types';
 
 type TMeta = {
-  attr?: KeysArray<TProject>;
+  attr?: KeysArray<Project>;
 };
 
-const validateList = typia.createAssert<{ ownerId: string } & TMeta>();
+const validateList = typia.createAssert<{ spaceId: string } & TMeta>();
 const validateShow = typia.createAssert<{ id: string } & TMeta>();
+const validateCreate = typia.createAssert<CreateProjectDto>();
+const validateUpdate = typia.createAssert<{ id: string } & UpdateProjectDto>();
 
 @Injectable()
 export class ProjectTrpcRouter extends BaseRouter {
@@ -28,6 +34,8 @@ export class ProjectTrpcRouter extends BaseRouter {
       projects: this.trpcService.router({
         list: this.list(),
         show: this.show(),
+        create: this.create(),
+        update: this.update(),
       }),
     };
   }
@@ -42,7 +50,20 @@ export class ProjectTrpcRouter extends BaseRouter {
 
   list() {
     return this.trpcService.procedure.input(validateList).query(async ({ input }) => {
-      return this.projectService.list(input.ownerId);
+      return this.projectService.list(input.spaceId);
+    });
+  }
+
+  create() {
+    return this.trpcService.procedure.input(validateCreate).mutation(async ({ input }) => {
+      return this.projectService.create(input);
+    });
+  }
+
+  update() {
+    return this.trpcService.procedure.input(validateUpdate).mutation(async ({ input }) => {
+      const { id, ...dto } = input;
+      return this.projectService.update(id, dto);
     });
   }
 }

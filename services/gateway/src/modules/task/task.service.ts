@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Task, TaskRepository } from '@repo/domain';
+import { 
+  Task, 
+  TaskRepository, 
+  CreateTaskDto, 
+  UpdateTaskDto 
+} from '@repo/domain';
 
 @Injectable()
 export class TaskService {
@@ -11,19 +16,20 @@ export class TaskService {
     return this.taskRepository.findByProjectId(projectId);
   }
 
-  // /**
-  //  * @deprecated Use TaskService.list(projectId) instead
-  //  */
-  // async findByProjectId(projectId: string): Promise<Task[]> {
-  //   return this.taskRepository.findByProjectId(projectId);
-  // }
-
   async findByAssigneeId(assigneeId: string): Promise<Task[]> {
     return this.taskRepository.findByAssigneeId(assigneeId);
   }
 
   async findById(id: string): Promise<Task | null> {
     return this.taskRepository.findById(id);
+  }
+
+  async create(dto: CreateTaskDto): Promise<Task> {
+    return this.taskRepository.create(dto);
+  }
+
+  async update(id: string, dto: UpdateTaskDto): Promise<Task> {
+    return this.taskRepository.update(id, dto);
   }
 }
 

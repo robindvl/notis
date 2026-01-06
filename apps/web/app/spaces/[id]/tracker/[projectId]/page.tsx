@@ -2,6 +2,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { trpc } from "@/shared/api";
+import type { Task, User as DomainUser } from "@repo/domain";
+
 import {
     KanbanBoard,
     KanbanCard,
@@ -13,23 +15,10 @@ import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Тип для задачи (соответствует бэкенду)
-type Task = {
-    id: string;
-    title: string;
-    description?: string;
-    statusId: string;
-    projectId: string;
-    assigneeId?: string;
-    createdAt: string;
-    updatedAt: string;
-};
-
-// Тип для пользователя (предполагаемая структура)
-type User = {
+// Расширяем тип пользователя для фронтенда
+type User = Partial<DomainUser> & {
     id: string;
     name: string;
-    email?: string;
     image?: string;
 };
 
@@ -38,6 +27,18 @@ type Column = {
     id: string;
     name: string;
     color: string;
+};
+
+// Тип для элемента Kanban, расширяющий базовый тип из компонента
+type KanbanTaskItem = {
+    id: string;
+    name: string;
+    column: string;
+    description?: string;
+    startAt: Date;
+    endAt: Date;
+    owner: User | null;
+    taskData: Task;
 };
 
 // Три колонки
@@ -95,7 +96,7 @@ const getUserAvatar = (assigneeId?: string, projectData?: any): User | null => {
 
 export default function Page() {
     const params = useParams<{ projectId: string }>();
-    const [kanbanItems, setKanbanItems] = useState<any[]>([]);
+    const [kanbanItems, setKanbanItems] = useState<KanbanTaskItem[]>([]);
 
     // Получаем данные проекта
     const projectQuery = useQuery(
@@ -119,7 +120,7 @@ export default function Page() {
 
             // Предполагаем, что задачи находятся в projectData.tasks
             // Если структура другая, нужно будет адаптировать
-            const tasks: Task[] = projectData.tasks || [];
+            const tasks = projectData.tasks || [];
 
             // Преобразуем задачи в формат для Kanban
             const items = tasks.map((task: Task) => {
@@ -130,8 +131,8 @@ export default function Page() {
                     id: task.id,
                     name: task.title,
                     description: task.description,
-                    startAt: new Date(task.createdAt),
-                    endAt: new Date(new Date(task.createdAt).getTime() + 7 * 24 * 60 * 60 * 1000), // +7 дней
+                    startAt: task.createdAt,
+                    endAt: new Date(task.createdAt.getTime() + 7 * 24 * 60 * 60 * 1000), // +7 дней
                     column: columnId,
                     owner: user,
                     taskData: task, // сохраняем исходные данные задачи
@@ -210,7 +211,7 @@ export default function Page() {
                 <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
                     <span>Total tasks: {tasks.length}</span>
                     <span>•</span>
-                    <span>Created: {new Date(projectData.createdAt).toLocaleDateString()}</span>
+                    <span>Created: {projectData.createdAt.toLocaleDateString()}</span>
                 </div>
             </div>
 
@@ -221,7 +222,7 @@ export default function Page() {
                         <p className="text-muted-foreground">No tasks found in this project</p>
                     </div>
                 ) : (
-                    <KanbanProvider
+                    <KanbanProvider<KanbanTaskItem, Column>
                         columns={columns}
                         data={kanbanItems}
                         onDataChange={setKanbanItems}
@@ -240,13 +241,11 @@ export default function Page() {
                     </span>
                                     </div>
                                 </KanbanHeader>
-                                <KanbanCards id={column.id}>
+                                <KanbanCards<KanbanTaskItem> id={column.id}>
                                     {(item) => (
-                                        <KanbanCard
-                                            column={column.id}
-                                            id={item.id}
+                                        <KanbanCard<KanbanTaskItem>
+                                            {...item}
                                             key={item.id}
-                                            name={item.name}
                                         >
                                             <div className="flex items-start justify-between gap-2 mb-2">
                                                 <div className="flex flex-col gap-1 flex-1">

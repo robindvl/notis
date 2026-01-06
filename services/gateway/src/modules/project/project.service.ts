@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Project, ProjectRepository } from '@repo/domain';
+import { 
+  Project, 
+  ProjectRepository, 
+  CreateProjectDto, 
+  UpdateProjectDto 
+} from '@repo/domain';
 
 @Injectable()
 export class ProjectService {
@@ -7,19 +12,20 @@ export class ProjectService {
     private readonly projectRepository: ProjectRepository,
   ) {}
 
-  async list(ownerId: string): Promise<Project[]> {
-    return this.projectRepository.findByOwnerId(ownerId);
+  async list(spaceId: string): Promise<Project[]> {
+    return this.projectRepository.findBySpaceId(spaceId);
   }
-
-  // /**
-  //  * @deprecated Use ProjectService.list(ownerId) instead
-  //  */
-  // async findBySpaceId(spaceId: string): Promise<Project[]> {
-  //   return this.projectRepository.findByOwnerId(spaceId);
-  // }
 
   async findById(id: string): Promise<Project | null> {
     return this.projectRepository.findById(id);
+  }
+
+  async create(dto: CreateProjectDto): Promise<Project> {
+    return this.projectRepository.create(dto as any);
+  }
+
+  async update(id: string, dto: UpdateProjectDto): Promise<Project> {
+    return this.projectRepository.update(id, dto);
   }
 }
 

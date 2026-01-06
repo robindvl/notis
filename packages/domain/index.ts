@@ -17,6 +17,9 @@ export * from './task/entities/project';
 export * from './task/entities/status';
 export * from './task/entities/task';
 
+export * from './task/dto/project.dto';
+export * from './task/dto/task.dto';
+
 export * from './task/repositories/project.repository';
 export * from './task/repositories/status.repository';
 export * from './task/repositories/task.repository';

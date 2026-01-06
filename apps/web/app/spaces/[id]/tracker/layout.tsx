@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarInput, SidebarInset } from "@/components/ui/sidebar"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 import { SpaceSwitcher } from "@/components/space-switcher"
 import {useParams} from "next/navigation";
 import {useQuery} from "@tanstack/react-query";
@@ -16,10 +14,10 @@ export default function TrackerLayout({
   children: React.ReactNode;
 }) {
   const params = useParams();
-  const ownerId = params?.id as string;
+  const spaceId = params?.id as string;
 
   const projects = useQuery(
-      trpc.projects.list.queryOptions({ ownerId })
+      trpc.projects.list.queryOptions({ spaceId })
   );
 
   console.log('projects', projects);

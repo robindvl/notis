@@ -1,12 +1,13 @@
-import {Task} from "./task";
+import type { Task } from "./task";
+import type { Space } from "../../core/entities/space";
 
 export interface Project {
   id: string;
   name: string;
   description?: string;
-  ownerId: string;
+  spaceId: string;
+  space?: Space;
   createdAt: Date;
   updatedAt: Date;
-  tasks: Task[];
+  tasks?: Task[];
 }
-

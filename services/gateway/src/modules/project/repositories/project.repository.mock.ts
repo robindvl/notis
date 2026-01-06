@@ -8,30 +8,31 @@ export class ProjectRepositoryMock extends ProjectRepository {
   private projects: Project[] = [];
   private generatedSpaceIds: Set<string> = new Set();
 
-  private generateProjectsForSpace(ownerId: string) {
-    if (this.generatedSpaceIds.has(ownerId)) return;
+  private generateProjectsForSpace(spaceId: string) {
+    if (this.generatedSpaceIds.has(spaceId)) return;
 
-    // Генерируем проекты для владельца
+    // Генерируем проекты для пространства
     const projects: Project[] = Array.from({ length: 4 }).map(() => ({
       id: uuidv7(),
       name: faker.book.author(),
       description: faker.lorem.sentence(),
-      ownerId,
+      spaceId,
+      tasks: [],
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
 
     this.projects.push(...projects);
-    this.generatedSpaceIds.add(ownerId);
+    this.generatedSpaceIds.add(spaceId);
   }
 
   async findById(id: string): Promise<Project | null> {
     return this.projects.find((project) => project.id === id) || null;
   }
 
-  async findByOwnerId(ownerId: string): Promise<Project[]> {
-    this.generateProjectsForSpace(ownerId);
-    return this.projects.filter((project) => project.ownerId === ownerId);
+  async findBySpaceId(spaceId: string): Promise<Project[]> {
+    this.generateProjectsForSpace(spaceId);
+    return this.projects.filter((project) => project.spaceId === spaceId);
   }
 
   // Метод для совместимости с предыдущей реализацией, не используется в интерфейсе
