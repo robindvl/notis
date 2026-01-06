@@ -40,7 +40,7 @@ export default function TrackerLayout({
                   projects.data.map(project => (
                     <Link
                         key={project.id}
-                        href={`/spaces/${params?.id}/projects/${project.id}`}
+                        href={`/spaces/${params?.id}/tracker/${project.id}`}
                         className="flex items-center p-2 hover:bg-muted cursor-pointer"
                     >
                       <span className="flex items-center gap-2 text-sm">

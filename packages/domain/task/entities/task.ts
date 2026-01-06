@@ -3,7 +3,7 @@ export interface Task {
   title: string;
   description?: string;
   statusId: string;
-  boardId: string;
+  projectId: string;
   assigneeId?: string;
   createdAt: Date;
   updatedAt: Date;

@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { SpaceModule } from './modules/space/space.module';
 import { NoteModule } from './modules/note/note.module';
 import { ProjectModule } from './modules/project/project.module';
+import { TaskModule } from './modules/task/task.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { ProjectModule } from './modules/project/project.module';
     UserModule,
     SpaceModule,
     NoteModule,
-    ProjectModule
+    ProjectModule,
+    TaskModule
   ],
   controllers: [AppController],
   providers: [AppService],
