@@ -4,7 +4,7 @@ import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { QueryClient } from "@tanstack/react-query";
 import superjson from 'superjson';
 
-import type { AppRouter } from "@repo/gateway/src/processors/trpc/trpc.router";
+import type { AppRouter } from "@repo/api/src/processors/trpc/trpc.router";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
