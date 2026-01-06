@@ -34,9 +34,8 @@
 | Название | База данных | Фреймворк | ORM | Описание |
 | - | - | - | - | - |
 | `services/gateway` | - | `NestJS` + `tRPC` | - | Центральный API Gateway, объединяющий микросервисы и предоставляющий единый типизированный tRPC интерфейс для клиентских приложений |
-| `services/core` | `?` | `?` | - | Содержит рабочие пространства и страницы |
-| `microservices/auth` | `PostgreSQL` или `MongoDB` | `Fastify` | - | Модуль для аутентификации и авторизации |
-| `microservices/content` | `MongoDB` | `Nest`, `FirstAPI` (с генерацией контроллеров на основе `OpenAPI`) | `TypeORM` | Отвечает за работы с страницами и контентом |
+| `microservices/auth` | `MongoDB` | `Express` | - | Модуль для аутентификации и авторизации |
+| `microservices/core` | `MongoDB` | `Nest`, `FirstAPI` (с генерацией контроллеров на основе `OpenAPI`) | `TypeORM` | Отвечает за работы с пространств и заметок |
 | `microservices/tasks` | `PostgreSQL` | `Nest` с `NestJS tRPC` | `PrismaORM` | Управление задачами. Есть одна загвоздка, задачи по сути должны наследоваться от `blocks` из `microservices/content`, надо продумать как |
 | `microservices/communication` | `MongoDB` | `Express`, `GraphQL` | `Mongoose` | Хранит в себе комментарии от заметок и задач, использовать `WebSocket` для обновления комментариев. Сам модуль может использовать не только для комментариев, но и для написания чата |
 | `microservices/calendar` | `PostgreSQL` | `Nest` писать котроллеры вручную, и генерировать из них `OpenAPI` | ? | Управление событиями, написать с использованием `WebSocket`. Сами события можно привязывать к задачам, например когда нужно выполнить |
