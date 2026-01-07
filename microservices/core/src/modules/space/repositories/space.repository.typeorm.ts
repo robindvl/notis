@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Space, SpaceCreateDto, SpaceRepository, SpaceUpdateDto, SpaceNotFoundException } from '@repo/domain';
 import { SpaceEntity } from '../entities/space.entity';
 import { uuidv7 } from 'uuidv7';
+import { SpacePersistenceMapper } from '../mappers/space-persistence.mapper';
 
 @Injectable()
 export class SpaceRepositoryTypeOrm extends SpaceRepository {
@@ -15,11 +16,13 @@ export class SpaceRepositoryTypeOrm extends SpaceRepository {
   }
 
   async findAll(): Promise<Space[]> {
-    return this.repository.find();
+    const entities = await this.repository.find();
+    return SpacePersistenceMapper.toDomainArray(entities);
   }
 
   async findById(id: string): Promise<Space | null> {
-    return this.repository.findOneBy({ id });
+    const entity = await this.repository.findOneBy({ id });
+    return entity ? SpacePersistenceMapper.toDomain(entity) : null;
   }
 
   async findByOwnerId(ownerId: string): Promise<Space[]> {
@@ -32,20 +35,22 @@ export class SpaceRepositoryTypeOrm extends SpaceRepository {
       ...space,
       id: uuidv7(),
     });
-    return this.repository.save(newSpace);
+    const saved = await this.repository.save(newSpace);
+    return SpacePersistenceMapper.toDomain(saved);
   }
 
   async update(id: string, data: SpaceUpdateDto): Promise<Space> {
-    const space = await this.findById(id);
-    if (!space) throw new SpaceNotFoundException(id);
+    const spaceEntity = await this.repository.findOneBy({ id });
+    if (!spaceEntity) throw new SpaceNotFoundException(id);
 
     const updatedSpace = this.repository.create({
-      ...space,
+      ...spaceEntity,
       ...data,
       id,
     });
 
-    return this.repository.save(updatedSpace);
+    const saved = await this.repository.save(updatedSpace);
+    return SpacePersistenceMapper.toDomain(saved);
   }
 
   async delete(id: string): Promise<void> {

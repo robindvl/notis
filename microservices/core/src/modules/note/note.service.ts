@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { NoteApi } from '../../@generated/api';
 import { Note as NoteModel } from '../../@generated/models';
 import { NoteCreateDto, NoteUpdateDto } from '@repo/domain';
-import { NoteResponseDto } from './note.dto';
 import { CreateNoteUseCase } from './use-cases/create-note.use-case';
 import { UpdateNoteUseCase } from './use-cases/update-note.use-case';
 import { GetNoteUseCase } from './use-cases/get-note.use-case';
 import { DeleteNoteUseCase } from './use-cases/delete-note.use-case';
 import { GetNotesUseCase } from './use-cases/get-notes.use-case';
+import { NoteApiMapper } from './mappers/note-api.mapper';
 
 @Injectable()
 export class NoteService implements NoteApi {
@@ -26,17 +26,17 @@ export class NoteService implements NoteApi {
     _request: Request,
   ): Promise<NoteModel[]> {
     const notes = await this.getNotesUseCase.execute(spaceId, sectionId, parentId);
-    return NoteResponseDto.fromDomainArray(notes);
+    return NoteApiMapper.toResponseArray(notes);
   }
 
   async createNote(noteCreate: NoteCreateDto, _request: Request): Promise<NoteModel> {
-    const note = await this.createNoteUseCase.execute(noteCreate);
-    return NoteResponseDto.fromDomain(note);
+    const note = await this.createNoteUseCase.execute(NoteApiMapper.toDomain(noteCreate));
+    return NoteApiMapper.toResponse(note);
   }
 
   async getNote(id: string, _request: Request): Promise<NoteModel> {
     const note = await this.getNoteUseCase.execute(id);
-    return NoteResponseDto.fromDomain(note);
+    return NoteApiMapper.toResponse(note);
   }
 
   async updateNote(
@@ -44,8 +44,8 @@ export class NoteService implements NoteApi {
     updateData: NoteUpdateDto,
     _request: Request,
   ): Promise<NoteModel> {
-    const note = await this.updateNoteUseCase.execute(id, updateData);
-    return NoteResponseDto.fromDomain(note);
+    const note = await this.updateNoteUseCase.execute(id, NoteApiMapper.toDomainUpdate(updateData));
+    return NoteApiMapper.toResponse(note);
   }
 
   async deleteNote(id: string, _request: Request): Promise<void> {

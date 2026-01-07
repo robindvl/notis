@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Note, NoteCreateDto, NoteRepository, NoteUpdateDto, NoteNotFoundException } from '@repo/domain';
 import { NoteEntity } from '../entities/note.entity';
 import { uuidv7 } from 'uuidv7';
+import { NotePersistenceMapper } from '../mappers/note-persistence.mapper';
 
 @Injectable()
 export class NoteRepositoryTypeOrm extends NoteRepository {
@@ -15,19 +16,23 @@ export class NoteRepositoryTypeOrm extends NoteRepository {
   }
 
   async findById(id: string): Promise<Note | null> {
-    return this.repository.findOneBy({ id });
+    const entity = await this.repository.findOneBy({ id });
+    return entity ? NotePersistenceMapper.toDomain(entity) : null;
   }
 
   async findBySpaceId(spaceId: string): Promise<Note[]> {
-    return this.repository.findBy({ spaceId });
+    const entities = await this.repository.findBy({ spaceId });
+    return NotePersistenceMapper.toDomainArray(entities);
   }
 
   async findBySectionId(sectionId: string): Promise<Note[]> {
-    return this.repository.findBy({ sectionId });
+    const entities = await this.repository.findBy({ sectionId });
+    return NotePersistenceMapper.toDomainArray(entities);
   }
 
   async findByParentId(parentId: string): Promise<Note[]> {
-    return this.repository.findBy({ parentId });
+    const entities = await this.repository.findBy({ parentId });
+    return NotePersistenceMapper.toDomainArray(entities);
   }
 
   async create(note: NoteCreateDto): Promise<Note> {
@@ -36,21 +41,23 @@ export class NoteRepositoryTypeOrm extends NoteRepository {
       id: uuidv7(),
     });
     
-    return this.repository.save(newNote);
+    const saved = await this.repository.save(newNote);
+    return NotePersistenceMapper.toDomain(saved);
   }
 
   async update(id: string, data: NoteUpdateDto): Promise<Note> {
-    const note = await this.findById(id);
+    const noteEntity = await this.repository.findOneBy({ id });
     
-    if (!note) throw new NoteNotFoundException(id);
+    if (!noteEntity) throw new NoteNotFoundException(id);
 
     const updatedNote = this.repository.create({
-      ...note,
+      ...noteEntity,
       ...data,
       id,
     });
 
-    return this.repository.save(updatedNote);
+    const saved = await this.repository.save(updatedNote);
+    return NotePersistenceMapper.toDomain(saved);
   }
 
   async delete(id: string): Promise<void> {
