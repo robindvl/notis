@@ -8,6 +8,7 @@ import { SpaceService } from './modules/space/space.service';
 import { NoteService } from './modules/note/note.service';
 import { SpaceModule } from './modules/space/space.module';
 import { NoteModule } from './modules/note/note.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { NoteEntity } from './modules/note/entities/note.entity';
 import { SpaceEntity } from './modules/space/entities/space.entity';
 
@@ -16,6 +17,7 @@ import { SpaceEntity } from './modules/space/entities/space.entity';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AuthModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

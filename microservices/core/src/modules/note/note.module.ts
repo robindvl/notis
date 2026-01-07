@@ -4,6 +4,8 @@ import { NoteRepository } from '@repo/domain';
 import { NoteRepositoryTypeOrm } from './repositories/note.repository.typeorm';
 import { NoteService } from './note.service';
 import { NoteEntity } from './entities/note.entity';
+import { NotePolicy } from './note.policy';
+import { SpaceModule } from '../space/space.module';
 import { CreateNoteUseCase } from './use-cases/create-note.use-case';
 import { UpdateNoteUseCase } from './use-cases/update-note.use-case';
 import { GetNoteUseCase } from './use-cases/get-note.use-case';
@@ -19,15 +21,20 @@ const UseCases = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([NoteEntity])],
+  imports: [
+    TypeOrmModule.forFeature([NoteEntity]), SpaceModule
+  ],
   providers: [
     NoteService,
+    NotePolicy,
     ...UseCases,
     {
       provide: NoteRepository,
       useClass: NoteRepositoryTypeOrm,
     },
   ],
-  exports: [NoteService, NoteRepository, ...UseCases],
+  exports: [
+    NoteService, NoteRepository, NotePolicy, ...UseCases
+  ],
 })
 export class NoteModule {}

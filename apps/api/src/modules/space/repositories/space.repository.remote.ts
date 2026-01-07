@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Space, SpaceCreateDto, SpaceRepository, SpaceUpdateDto } from '@repo/domain';
 import { Configuration, SpaceApi } from '../../../@generated/core.api';
+import { CoreApiAuthMiddleware } from '../../../common/core-api.middleware';
 
 @Injectable()
 export class SpaceRepositoryRemote extends SpaceRepository {
@@ -10,6 +11,7 @@ export class SpaceRepositoryRemote extends SpaceRepository {
     super();
     const config = new Configuration({
       basePath: process.env.CORE_SERVICE_URL || 'http://127.0.0.1:5002',
+      middleware: [new CoreApiAuthMiddleware()],
     });
     this.coreApi = new SpaceApi(config);
   }
@@ -51,4 +53,3 @@ export class SpaceRepositoryRemote extends SpaceRepository {
     throw new Error('Method not implemented.');
   }
 }
-

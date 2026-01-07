@@ -10,6 +10,7 @@ import { ProjectTrpcRouter } from '../../modules/project/project.trpc';
 import { TaskTrpcRouter } from '../../modules/task/task.trpc';
 import { AuthTrpcRouter } from '../../modules/auth/auth.trpc';
 import { AuthService } from '../../modules/auth/auth.service';
+import { UserContext } from '../../common/user-context';
 
 @Injectable()
 export class TrpcRouter {
@@ -38,21 +39,26 @@ export class TrpcRouter {
   applyMiddleware(_app: NestFastifyApplication) {
     _app.getHttpAdapter().all(`/trpc/:path`, async (req, res) => {
       const path = (req.params as any).path;
-      await fastifyRequestHandler({
-        router: this.appRouter,
-        createContext: async ({ req: trpcReq }) => {
-          let authHeader = (trpcReq.headers as any).authorization;
-          
-          if (!authHeader && (trpcReq as any).cookies) {
-            const token = (trpcReq as any).cookies.token;
-            if (token) {
-              authHeader = `Bearer ${token}`;
-            }
-          }
-          
-          if (authHeader && authHeader.startsWith('Bearer ')) {
-            const token = authHeader.split(' ')[1];
-            const user = await this.authService.validateToken(token);
+
+      let authHeader = (req.headers as any).authorization;
+      
+      if (!authHeader && (req as any).cookies) {
+        const token = (req as any).cookies.token;
+        if (token) {
+          authHeader = `Bearer ${token}`;
+        }
+      }
+      
+      let user = undefined;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        user = await this.authService.validateToken(token);
+      }
+
+      const runTrpc = async () => {
+        await fastifyRequestHandler({
+          router: this.appRouter,
+          createContext: async () => {
             if (!user) {
               return { user: undefined };
             }
@@ -62,14 +68,18 @@ export class TrpcRouter {
                 email: user.email,
               },
             };
-          }
-          
-          return { user: undefined };
-        },
-        req,
-        res,
-        path,
-      });
+          },
+          req,
+          res,
+          path,
+        });
+      };
+
+      if (user) {
+        await UserContext.run(user, runTrpc);
+      } else {
+        await runTrpc();
+      }
     });
   }
 }

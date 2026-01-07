@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Note, NoteCreateDto, NoteRepository, NoteUpdateDto } from '@repo/domain';
 import { Configuration, NoteApi } from '../../../@generated/core.api';
+import { CoreApiAuthMiddleware } from '../../../common/core-api.middleware';
 
 @Injectable()
 export class NoteRepositoryRemote extends NoteRepository {
@@ -10,6 +11,7 @@ export class NoteRepositoryRemote extends NoteRepository {
     super();
     const config = new Configuration({
       basePath: process.env.CORE_SERVICE_URL || 'http://127.0.0.1:5002',
+      middleware: [new CoreApiAuthMiddleware()],
     });
     this.coreApi = new NoteApi(config);
   }
@@ -73,4 +75,3 @@ export class NoteRepositoryRemote extends NoteRepository {
     };
   }
 }
-
