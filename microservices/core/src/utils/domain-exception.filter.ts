@@ -1,27 +1,30 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus, NotFoundException, BadRequestException } from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { DomainException, EntityNotFoundException } from '@repo/domain';
+import { TypeGuardError } from 'typia';
 
-@Catch(DomainException)
+@Catch(DomainException, TypeGuardError)
 export class DomainExceptionFilter implements ExceptionFilter {
-  catch(exception: DomainException, host: ArgumentsHost) {
+  catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = exception.message;
+    let error = exception.name;
 
     if (exception instanceof EntityNotFoundException) {
       status = HttpStatus.NOT_FOUND;
+    } else if (exception instanceof TypeGuardError) {
+      status = HttpStatus.BAD_REQUEST;
+      message = `Validation failed at ${exception.path}: expected ${exception.expected}`;
+      error = 'ValidationError';
     }
-
-    // Здесь можно добавить обработку других типов доменных исключений
-    // Например, для ошибок валидации бизнес-правил — HttpStatus.BAD_REQUEST
 
     response.status(status).json({
       statusCode: status,
       message: message,
-      error: exception.name,
+      error: error,
     });
   }
 }

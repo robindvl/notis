@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { NoteApi } from '../../@generated/api';
-import { Note as NoteModel, NoteCreate, NoteUpdate } from '../../@generated/models';
+import { Note as NoteModel } from '../../@generated/models';
 import { NoteCreateDto, NoteUpdateDto } from '@repo/domain';
 import { NoteResponseDto } from './note.dto';
 import { CreateNoteUseCase } from './use-cases/create-note.use-case';
@@ -29,8 +29,8 @@ export class NoteService implements NoteApi {
     return NoteResponseDto.fromDomainArray(notes);
   }
 
-  async createNote(noteCreate: NoteCreate, _request: Request): Promise<NoteModel> {
-    const note = await this.createNoteUseCase.execute(noteCreate as NoteCreateDto);
+  async createNote(noteCreate: NoteCreateDto, _request: Request): Promise<NoteModel> {
+    const note = await this.createNoteUseCase.execute(noteCreate);
     return NoteResponseDto.fromDomain(note);
   }
 
@@ -41,10 +41,10 @@ export class NoteService implements NoteApi {
 
   async updateNote(
     id: string,
-    updateData: NoteUpdate,
+    updateData: NoteUpdateDto,
     _request: Request,
   ): Promise<NoteModel> {
-    const note = await this.updateNoteUseCase.execute(id, updateData as NoteUpdateDto);
+    const note = await this.updateNoteUseCase.execute(id, updateData);
     return NoteResponseDto.fromDomain(note);
   }
 

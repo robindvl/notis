@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Space, SpaceUpdateDto, SpaceRepository } from '@repo/domain';
+import typia from 'typia';
 
 @Injectable()
 export class UpdateSpaceUseCase {
   constructor(private readonly repository: SpaceRepository) {}
 
   async execute(id: string, dto: SpaceUpdateDto): Promise<Space> {
+    typia.assert<SpaceUpdateDto>(dto);
     return this.repository.update(id, dto);
   }
 }

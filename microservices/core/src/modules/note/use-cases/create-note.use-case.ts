@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Note, NoteCreateDto, NoteRepository } from '@repo/domain';
+import typia from 'typia';
 
 @Injectable()
 export class CreateNoteUseCase {
   constructor(private readonly repository: NoteRepository) {}
 
   async execute(dto: NoteCreateDto): Promise<Note> {
-    // Здесь можно добавить доменную логику, валидацию или проверку прав
+    typia.assert<NoteCreateDto>(dto);
     return this.repository.create(dto);
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SpaceApi } from '../../@generated/api';
-import { Space as SpaceModel, SpaceCreate, SpaceUpdate } from '../../@generated/models';
+import { Space as SpaceModel } from '../../@generated/models';
 import { SpaceCreateDto, SpaceUpdateDto } from '@repo/domain';
 import { SpaceResponseDto } from './space.dto';
 import { CreateSpaceUseCase } from './use-cases/create-space.use-case';
@@ -25,10 +25,10 @@ export class SpaceService implements SpaceApi {
   }
 
   async createSpace(
-    spaceCreate: SpaceCreate,
+    spaceCreate: SpaceCreateDto,
     _request: Request,
   ): Promise<SpaceModel> {
-    const space = await this.createSpaceUseCase.execute(spaceCreate as SpaceCreateDto);
+    const space = await this.createSpaceUseCase.execute(spaceCreate);
     return SpaceResponseDto.fromDomain(space);
   }
 
@@ -39,10 +39,10 @@ export class SpaceService implements SpaceApi {
 
   async updateSpace(
     id: string,
-    spaceUpdate: SpaceUpdate,
+    spaceUpdate: SpaceUpdateDto,
     _request: Request,
   ): Promise<SpaceModel> {
-    const space = await this.updateSpaceUseCase.execute(id, spaceUpdate as SpaceUpdateDto);
+    const space = await this.updateSpaceUseCase.execute(id, spaceUpdate);
     return SpaceResponseDto.fromDomain(space);
   }
 

@@ -11,6 +11,11 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2023",
+    "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      }
+    ],
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
