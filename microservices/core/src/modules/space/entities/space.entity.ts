@@ -9,10 +9,10 @@ export class SpaceEntity implements ISpace {
   @Column()
   name: string;
 
-  @Column({ default: '' })
-  img: string;
+  @Column({ nullable: true })
+  img?: string;
 
   @CreateDateColumn()
-  createdAt: string; // Implements ISpace, but TypeORM will set this as a Date object at runtime
+  createdAt: Date;
 }
 

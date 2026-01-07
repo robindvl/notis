@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Note, NoteRepository } from '@repo/domain';
+import { Note, NoteCreateDto, NoteRepository, NoteUpdateDto } from '@repo/domain';
 import { NoteEntity } from '../entities/note.entity';
 import { uuidv7 } from 'uuidv7';
 
@@ -30,19 +30,27 @@ export class NoteRepositoryTypeOrm extends NoteRepository {
     return this.repository.findBy({ parentId });
   }
 
-  async create(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note> {
+  async create(note: NoteCreateDto): Promise<Note> {
     const newNote = this.repository.create({
       ...note,
       id: uuidv7(),
     });
+    
     return this.repository.save(newNote);
   }
 
-  async update(id: string, note: Partial<Note>): Promise<Note> {
-    await this.repository.update(id, note as any);
-    const updated = await this.findById(id);
-    if (!updated) throw new Error('Note not found');
-    return updated;
+  async update(id: string, data: NoteUpdateDto): Promise<Note> {
+    const note = await this.findById(id);
+    
+    if (!note) throw new Error('Note not found');
+
+    const updatedNote = this.repository.create({
+      ...note,
+      ...data,
+      id,
+    });
+
+    return this.repository.save(updatedNote);
   }
 
   async delete(id: string): Promise<void> {
@@ -51,7 +59,5 @@ export class NoteRepositoryTypeOrm extends NoteRepository {
 
   async reorder(parentId: string, noteIds: string[]): Promise<void> {
     // Basic implementation for reorder if needed
-    // In a real app, you'd likely have a 'position' column
   }
 }
-

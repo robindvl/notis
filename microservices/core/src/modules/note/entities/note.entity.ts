@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Note as INote } from '@repo/domain';
+import { Note as INote, NoteType } from '@repo/domain';
 
 @Entity('notes')
 export class NoteEntity implements INote {
@@ -17,10 +17,10 @@ export class NoteEntity implements INote {
 
   @Column({
     type: 'enum',
-    enum: ['note', 'section', 'paragraph', 'note_task'],
-    default: 'note',
+    enum: Object.values(NoteType),
+    default: NoteType.Note,
   })
-  type: 'note' | 'section' | 'paragraph' | 'note_task';
+  type: NoteType;
 
   @Column({ type: 'uuid', nullable: true })
   parentId?: string;

@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { NoteApi } from '../../@generated/api';
-import { Note, NoteCreate, NoteUpdate } from '../../@generated/models';
-import { NoteRepository } from '@repo/domain';
+import { Note as NoteModel } from '../../@generated/models';
+import { NoteCreateDto, Note as NoteDomain, NoteRepository, NoteUpdateDto } from '@repo/domain';
+import { NoteResponseDto } from './note.dto';
 
 @Injectable()
 export class NoteService implements NoteApi {
@@ -11,9 +12,9 @@ export class NoteService implements NoteApi {
     spaceId: string | undefined,
     sectionId: string | undefined,
     parentId: string | undefined,
-    request: Request,
-  ): Promise<Note[]> {
-    let notes: any[];
+    _request: Request,
+  ): Promise<NoteModel[]> {
+    let notes: NoteDomain[];
 
     if (spaceId) {
       notes = await this.repository.findBySpaceId(spaceId);
@@ -22,94 +23,37 @@ export class NoteService implements NoteApi {
     } else if (parentId) {
       notes = await this.repository.findByParentId(parentId);
     } else {
-      // Return empty list or throw error depending on requirements
-      // For now, let's return all if no filter, or empty
-      return [];
+      throw new BadRequestException(
+        'At least one filter (spaceId, sectionId, or parentId) must be provided',
+      );
     }
 
-    return notes.map((n) => ({
-      id: n.id,
-      title: n.title,
-      body: n.body || '',
-      emoji: n.emoji || '',
-      type: n.type as any,
-      parentId: n.parentId,
-      sectionId: n.sectionId,
-      spaceId: n.spaceId,
-      content: n.content as any,
-      createdAt: n.createdAt.toISOString(),
-      updatedAt: n.updatedAt.toISOString(),
-    }));
+    return NoteResponseDto.fromDomainArray(notes);
   }
 
-  async createNote(noteCreate: NoteCreate, request: Request): Promise<Note> {
-    const note = await this.repository.create({
-      title: noteCreate.title,
-      body: noteCreate.body,
-      emoji: noteCreate.emoji,
-      type: noteCreate.type as any,
-      parentId: noteCreate.parentId,
-      sectionId: noteCreate.sectionId,
-      spaceId: noteCreate.spaceId,
-      content: noteCreate.content as Record<string, unknown>,
-    });
-    return {
-      id: note.id,
-      title: note.title,
-      body: note.body || '',
-      emoji: note.emoji || '',
-      type: note.type as any,
-      parentId: note.parentId,
-      sectionId: note.sectionId,
-      spaceId: note.spaceId,
-      content: note.content as any,
-      createdAt: note.createdAt.toISOString(),
-      updatedAt: note.updatedAt.toISOString(),
-    };
+  async createNote(noteCreate: NoteCreateDto, _request: Request): Promise<NoteModel> {
+    const note = await this.repository.create(noteCreate);
+    return NoteResponseDto.fromDomain(note);
   }
 
-  async getNote(id: string, request: Request): Promise<Note> {
+  async getNote(id: string, _request: Request): Promise<NoteModel> {
     const note = await this.repository.findById(id);
     if (!note) {
       throw new NotFoundException(`Note with ID ${id} not found`);
     }
-    return {
-      id: note.id,
-      title: note.title,
-      body: note.body || '',
-      emoji: note.emoji || '',
-      type: note.type as any,
-      parentId: note.parentId,
-      sectionId: note.sectionId,
-      spaceId: note.spaceId,
-      content: note.content as any,
-      createdAt: note.createdAt.toISOString(),
-      updatedAt: note.updatedAt.toISOString(),
-    };
+    return NoteResponseDto.fromDomain(note);
   }
 
   async updateNote(
     id: string,
-    noteUpdate: NoteUpdate,
-    request: Request,
-  ): Promise<Note> {
-    const note = await this.repository.update(id, noteUpdate as any);
-    return {
-      id: note.id,
-      title: note.title,
-      body: note.body || '',
-      emoji: note.emoji || '',
-      type: note.type as any,
-      parentId: note.parentId,
-      sectionId: note.sectionId,
-      spaceId: note.spaceId,
-      content: note.content as any,
-      createdAt: note.createdAt.toISOString(),
-      updatedAt: note.updatedAt.toISOString(),
-    };
+    updateData: NoteUpdateDto,
+    _request: Request,
+  ): Promise<NoteModel> {
+    const note = await this.repository.update(id, updateData);
+    return NoteResponseDto.fromDomain(note);
   }
 
-  async deleteNote(id: string, request: Request): Promise<void> {
+  async deleteNote(id: string, _request: Request): Promise<void> {
     await this.repository.delete(id);
   }
 }

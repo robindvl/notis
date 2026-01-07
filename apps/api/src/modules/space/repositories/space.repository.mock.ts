@@ -10,19 +10,19 @@ export class SpaceRepositoryMock extends SpaceRepository {
       id: uuidv7(),
       name: faker.book.format(),
       img: faker.image.avatar(),
-      createdAt: String(Math.random()),
+      createdAt: new Date(),
     },
     {
       id: uuidv7(),
       name: faker.book.format(),
       img: faker.image.avatar(),
-      createdAt: String(Math.random()),
+      createdAt: new Date(),
     },
     {
       id: uuidv7(),
       name: faker.book.format(),
       img: faker.image.avatar(),
-      createdAt: String(Math.random()),
+      createdAt: new Date(),
     },
   ];
 
@@ -42,7 +42,7 @@ export class SpaceRepositoryMock extends SpaceRepository {
     const newSpace: Space = {
       ...space,
       id: uuidv7(),
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(),
     };
     this.spaces.push(newSpace);
     return newSpace;

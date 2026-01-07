@@ -39,11 +39,30 @@ export interface NoteUpdate {
     emoji?: string;
     /**
      * 
+     * @type {string}
+     * @memberof NoteUpdate
+     */
+    type?: NoteUpdateTypeEnum;
+    /**
+     * 
      * @type {object}
      * @memberof NoteUpdate
      */
     content?: object;
 }
+
+
+/**
+ * @export
+ */
+export const NoteUpdateTypeEnum = {
+    Note: 'note',
+    Section: 'section',
+    Paragraph: 'paragraph',
+    NoteTask: 'note_task'
+} as const;
+export type NoteUpdateTypeEnum = typeof NoteUpdateTypeEnum[keyof typeof NoteUpdateTypeEnum];
+
 
 /**
  * Check if a given object implements the NoteUpdate interface.
@@ -65,6 +84,7 @@ export function NoteUpdateFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'title': json['title'] == null ? undefined : json['title'],
         'body': json['body'] == null ? undefined : json['body'],
         'emoji': json['emoji'] == null ? undefined : json['emoji'],
+        'type': json['type'] == null ? undefined : json['type'],
         'content': json['content'] == null ? undefined : json['content'],
     };
 }
@@ -83,6 +103,7 @@ export function NoteUpdateToJSONTyped(value?: NoteUpdate | null, ignoreDiscrimin
         'title': value['title'],
         'body': value['body'],
         'emoji': value['emoji'],
+        'type': value['type'],
         'content': value['content'],
     };
 }

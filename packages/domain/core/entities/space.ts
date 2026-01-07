@@ -1,6 +1,6 @@
 export interface Space {
   id: string;
   name: string;
-  img: string;
-  createdAt: string;
+  img?: string;
+  createdAt: Date;
 }

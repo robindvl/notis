@@ -260,6 +260,7 @@ components:
           format: uuid
         content:
           type: object
+          additionalProperties: true
         createdAt:
           type: string
           format: date-time
@@ -291,6 +292,7 @@ components:
           format: uuid
         content:
           type: object
+          additionalProperties: true
 
     NoteUpdate:
       type: object
@@ -301,5 +303,9 @@ components:
           type: string
         emoji:
           type: string
+        type:
+          type: string
+          enum: [note, section, paragraph, note_task]
         content:
           type: object
+          additionalProperties: true

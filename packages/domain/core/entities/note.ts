@@ -1,9 +1,18 @@
+export const NoteType = {
+  Note: 'note',
+  Section: 'section',
+  Paragraph: 'paragraph',
+  NoteTask: 'note_task',
+} as const;
+
+export type NoteType = typeof NoteType[keyof typeof NoteType];
+
 export interface Note {
   id: string;
   title: string;
   body?: string;
   emoji?: string;
-  type: 'note' | 'section' | 'paragraph' | 'note_task';
+  type: NoteType;
   parentId?: string;
   sectionId?: string;
   spaceId: string;

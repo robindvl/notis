@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Space, SpaceRepository } from '@repo/domain';
+import { Space, SpaceCreateDto, SpaceRepository, SpaceUpdateDto } from '@repo/domain';
 import { SpaceEntity } from '../entities/space.entity';
 import { uuidv7 } from 'uuidv7';
 
@@ -15,46 +15,40 @@ export class SpaceRepositoryTypeOrm extends SpaceRepository {
   }
 
   async findAll(): Promise<Space[]> {
-    const spaces = await this.repository.find();
-    return spaces.map(this.mapToDomain);
+    return this.repository.find();
   }
 
   async findById(id: string): Promise<Space | null> {
-    const space = await this.repository.findOneBy({ id });
-    return space ? this.mapToDomain(space) : null;
+    return this.repository.findOneBy({ id });
   }
 
   async findByOwnerId(ownerId: string): Promise<Space[]> {
-    // Current SpaceEntity doesn't have ownerId, but the repository interface requires it.
-    // For now, returning all or empty if needed.
+    // SpaceEntity doesn't have ownerId yet
     return this.findAll();
   }
 
-  async create(space: Omit<Space, 'id' | 'createdAt'>): Promise<Space> {
+  async create(space: SpaceCreateDto): Promise<Space> {
     const newSpace = this.repository.create({
       ...space,
       id: uuidv7(),
     });
-    const saved = await this.repository.save(newSpace);
-    return this.mapToDomain(saved);
+    return this.repository.save(newSpace);
   }
 
-  async update(id: string, space: Partial<Space>): Promise<Space> {
-    await this.repository.update(id, space);
-    const updated = await this.findById(id);
-    if (!updated) throw new Error('Space not found');
-    return updated;
+  async update(id: string, data: SpaceUpdateDto): Promise<Space> {
+    const space = await this.findById(id);
+    if (!space) throw new Error('Space not found');
+
+    const updatedSpace = this.repository.create({
+      ...space,
+      ...data,
+      id,
+    });
+
+    return this.repository.save(updatedSpace);
   }
 
   async delete(id: string): Promise<void> {
     await this.repository.delete(id);
   }
-
-  private mapToDomain(entity: SpaceEntity): Space {
-    return {
-      ...entity,
-      createdAt: (entity.createdAt as any) instanceof Date ? (entity.createdAt as any).toISOString() : entity.createdAt,
-    };
-  }
 }
-

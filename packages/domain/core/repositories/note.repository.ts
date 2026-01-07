@@ -1,3 +1,4 @@
+import { NoteCreateDto, NoteUpdateDto } from '../dto/note.dto';
 import { Note } from '../entities/note';
 
 export abstract class NoteRepository {
@@ -5,8 +6,8 @@ export abstract class NoteRepository {
   abstract findBySpaceId(spaceId: string): Promise<Note[]>;
   abstract findBySectionId(sectionId: string): Promise<Note[]>;
   abstract findByParentId(parentId: string): Promise<Note[]>;
-  abstract create(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note>;
-  abstract update(id: string, note: Partial<Note>): Promise<Note>;
+  abstract create(note: NoteCreateDto): Promise<Note>;
+  abstract update(id: string, data: NoteUpdateDto): Promise<Note>;
   abstract delete(id: string): Promise<void>;
   abstract reorder(parentId: string, noteIds: string[]): Promise<void>;
 }

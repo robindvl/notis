@@ -9,7 +9,7 @@ export interface Note {
   parentId?: string;
   sectionId?: string;
   spaceId: string;
-  content?: object;
+  content?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Note, NoteRepository } from '@repo/domain';
+import { Note, NoteCreateDto, NoteRepository, NoteType, NoteUpdateDto } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
 
@@ -11,26 +11,24 @@ export class NoteRepositoryMock extends NoteRepository {
   private generateNotesForSpace(spaceId: string) {
     if (this.generatedSpaceIds.has(spaceId)) return;
 
-    // Генерируем разделы
     const sections: Note[] = Array.from({ length: 2 }).map((_, i) => ({
       id: `section-${spaceId}-${i}`,
       title: faker.lorem.sentence(2).replace('.', ''),
       body: faker.lorem.sentences(2),
       emoji: i === 0 ? '📚' : '🗄️',
-      type: 'section',
+      type: NoteType.Section,
       spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
 
-    // Генерируем заметки в разделах
     const sectionNotes: Note[] = sections.flatMap((section) =>
       Array.from({ length: 2 }).map(() => ({
         id: uuidv7(),
         title: faker.lorem.sentence(3).replace('.', ''),
         body: faker.lorem.sentences(3),
         emoji: faker.helpers.arrayElement(['📝', '📊', '📓', '📗']),
-        type: 'note',
+        type: NoteType.Note,
         spaceId,
         sectionId: section.id,
         createdAt: new Date(),
@@ -38,13 +36,12 @@ export class NoteRepositoryMock extends NoteRepository {
       })),
     );
 
-    // Генерируем заметки в корне
     const rootNotes: Note[] = Array.from({ length: 2 }).map(() => ({
       id: uuidv7(),
       title: faker.lorem.sentence(2).replace('.', ''),
       body: faker.lorem.sentences(2),
       emoji: '🌱',
-      type: 'note',
+      type: NoteType.Note,
       spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -71,7 +68,7 @@ export class NoteRepositoryMock extends NoteRepository {
     return this.notes.filter((n) => n.parentId === parentId);
   }
 
-  async create(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note> {
+  async create(note: NoteCreateDto): Promise<Note> {
     const newNote: Note = {
       ...note,
       id: uuidv7(),
@@ -82,11 +79,18 @@ export class NoteRepositoryMock extends NoteRepository {
     return newNote;
   }
 
-  async update(id: string, note: Partial<Note>): Promise<Note> {
+  async update(id: string, data: NoteUpdateDto): Promise<Note> {
     const index = this.notes.findIndex((n) => n.id === id);
     if (index === -1) throw new Error('Note not found');
-    const updatedNote = { ...this.notes[index], ...note, id, updatedAt: new Date() } as Note;
+
+    const updatedNote: Note = {
+      ...this.notes[index],
+      ...data,
+      id,
+      updatedAt: new Date(),
+    };
     this.notes[index] = updatedNote;
+
     return updatedNote;
   }
 
@@ -98,4 +102,3 @@ export class NoteRepositoryMock extends NoteRepository {
     // mock implementation
   }
 }
-

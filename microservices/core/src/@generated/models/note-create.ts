@@ -8,7 +8,7 @@ export interface NoteCreate {
   parentId?: string;
   sectionId?: string;
   spaceId: string;
-  content?: object;
+  content?: Record<string, unknown>;
 }
 export namespace NoteCreate {
   export const TypeEnum = {

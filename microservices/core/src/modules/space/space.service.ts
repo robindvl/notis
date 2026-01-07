@@ -1,66 +1,44 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SpaceApi } from '../../@generated/api';
-import { Space, SpaceCreate, SpaceUpdate } from '../../@generated/models';
+import { Space as SpaceModel, SpaceCreate, SpaceUpdate } from '../../@generated/models';
 import { SpaceRepository } from '@repo/domain';
+import { SpaceResponseDto } from './space.dto';
 
 @Injectable()
 export class SpaceService implements SpaceApi {
   constructor(private readonly repository: SpaceRepository) {}
 
-  async getSpaces(request: Request): Promise<Space[]> {
+  async getSpaces(_request: Request): Promise<SpaceModel[]> {
     const spaces = await this.repository.findAll();
-    return spaces.map((s) => ({
-      id: s.id,
-      name: s.name,
-      img: s.img,
-      createdAt: s.createdAt,
-    }));
+    return SpaceResponseDto.fromDomainArray(spaces);
   }
 
   async createSpace(
     spaceCreate: SpaceCreate,
-    request: Request,
-  ): Promise<Space> {
-    const space = await this.repository.create({
-      name: spaceCreate.name,
-      img: spaceCreate.img || '',
-    });
-    return {
-      id: space.id,
-      name: space.name,
-      img: space.img,
-      createdAt: space.createdAt,
-    };
+    _request: Request,
+  ): Promise<SpaceModel> {
+    const space = await this.repository.create(spaceCreate);
+    return SpaceResponseDto.fromDomain(space);
   }
 
-  async getSpace(id: string, request: Request): Promise<Space> {
+  async getSpace(id: string, _request: Request): Promise<SpaceModel> {
     const space = await this.repository.findById(id);
     if (!space) {
       throw new NotFoundException(`Space with ID ${id} not found`);
     }
-    return {
-      id: space.id,
-      name: space.name,
-      img: space.img,
-      createdAt: space.createdAt,
-    };
+    return SpaceResponseDto.fromDomain(space);
   }
 
   async updateSpace(
     id: string,
     spaceUpdate: SpaceUpdate,
-    request: Request,
-  ): Promise<Space> {
+    _request: Request,
+  ): Promise<SpaceModel> {
     const space = await this.repository.update(id, spaceUpdate);
-    return {
-      id: space.id,
-      name: space.name,
-      img: space.img,
-      createdAt: space.createdAt,
-    };
+    return SpaceResponseDto.fromDomain(space);
   }
 
-  async deleteSpace(id: string, request: Request): Promise<void> {
+  async deleteSpace(id: string, _request: Request): Promise<void> {
     await this.repository.delete(id);
   }
 }
