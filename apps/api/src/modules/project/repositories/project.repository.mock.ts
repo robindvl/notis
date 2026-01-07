@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Project, ProjectRepository } from '@repo/domain';
+import { Project, ProjectRepository, ProjectNotFoundException } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
 
@@ -11,7 +11,6 @@ export class ProjectRepositoryMock extends ProjectRepository {
   private generateProjectsForSpace(spaceId: string) {
     if (this.generatedSpaceIds.has(spaceId)) return;
 
-    // Генерируем проекты для пространства
     const projects: Project[] = Array.from({ length: 4 }).map(() => ({
       id: uuidv7(),
       name: faker.book.author(),
@@ -35,12 +34,6 @@ export class ProjectRepositoryMock extends ProjectRepository {
     return this.projects.filter((project) => project.spaceId === spaceId);
   }
 
-  // Метод для совместимости с предыдущей реализацией, не используется в интерфейсе
-  // async findBySpaceId(spaceId: string): Promise<Project[]> {
-  //   this.generateProjectsForSpace(spaceId);
-  //   return this.projects.filter((n) => n.spaceId === spaceId);
-  // }
-
   async create(project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<Project> {
     const newProject: Project = {
       ...project,
@@ -54,7 +47,7 @@ export class ProjectRepositoryMock extends ProjectRepository {
 
   async update(id: string, project: Partial<Project>): Promise<Project> {
     const index = this.projects.findIndex((project) => project.id === id);
-    if (index === -1) throw new Error('Project not found');
+    if (index === -1) throw new ProjectNotFoundException(id);
     const updatedProject = { ...this.projects[index], ...project, id, updatedAt: new Date() } as Project;
     this.projects[index] = updatedProject;
     return updatedProject;
@@ -68,4 +61,3 @@ export class ProjectRepositoryMock extends ProjectRepository {
     // mock implementation
   }
 }
-

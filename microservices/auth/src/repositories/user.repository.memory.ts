@@ -1,4 +1,4 @@
-import { User, UserRepository, type CreateUserDbInput } from '@repo/domain';
+import { User, UserRepository, type CreateUserDbInput, UserNotFoundException } from '@repo/domain';
 import { uuidv7 } from 'uuidv7';
 
 export class MemoryUserRepository extends UserRepository {
@@ -30,7 +30,7 @@ export class MemoryUserRepository extends UserRepository {
 
   async update(id: string, user: Partial<User>): Promise<User> {
     const index = this.users.findIndex(u => u.id === id);
-    if (index === -1) throw new Error('User not found');
+    if (index === -1) throw new UserNotFoundException(id);
     
     this.users[index] = { ...this.users[index], ...user, id } as User & { password?: string };
     return this.users[index] as User;
@@ -40,4 +40,3 @@ export class MemoryUserRepository extends UserRepository {
     this.users = this.users.filter(u => u.id !== id);
   }
 }
-

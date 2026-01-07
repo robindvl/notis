@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Task, TaskRepository } from '@repo/domain';
+import { Task, TaskRepository, TaskNotFoundException } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
 
@@ -11,7 +11,6 @@ export class TaskRepositoryMock extends TaskRepository {
   private generateTasksForProject(projectId: string) {
     if (this.generatedSpaceIds.has(projectId)) return;
 
-    // Генерируем задачи для доски
     const tasks: Task[] = Array.from({ length: 4 }).map(() => ({
       id: uuidv7(),
       title: faker.lorem.sentence(3),
@@ -37,7 +36,6 @@ export class TaskRepositoryMock extends TaskRepository {
   }
 
   async findByAssigneeId(assigneeId: string): Promise<Task[]> {
-    // Генерируем задачи при необходимости
     if (this.tasks.length === 0) {
       this.generateTasksForProject(uuidv7());
     }
@@ -57,7 +55,7 @@ export class TaskRepositoryMock extends TaskRepository {
 
   async update(id: string, task: Partial<Task>): Promise<Task> {
     const index = this.tasks.findIndex((task) => task.id === id);
-    if (index === -1) throw new Error('Task not found');
+    if (index === -1) throw new TaskNotFoundException(id);
     const updatedTask = { ...this.tasks[index], ...task, id, updatedAt: new Date() } as Task;
     this.tasks[index] = updatedTask;
     return updatedTask;
@@ -71,4 +69,3 @@ export class TaskRepositoryMock extends TaskRepository {
     // mock implementation
   }
 }
-

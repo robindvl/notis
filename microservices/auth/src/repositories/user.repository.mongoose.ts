@@ -1,4 +1,4 @@
-import { User, UserRepository, type CreateUserDbInput } from '@repo/domain';
+import { User, UserRepository, type CreateUserDbInput, UserNotFoundException } from '@repo/domain';
 import { UserModel } from '../models/user.model';
 
 export class MongooseUserRepository extends UserRepository {
@@ -24,7 +24,7 @@ export class MongooseUserRepository extends UserRepository {
 
   async update(id: string, user: Partial<User>): Promise<User> {
     const updatedUser = await UserModel.findOneAndUpdate({ id }, user, { new: true });
-    if (!updatedUser) throw new Error('User not found');
+    if (!updatedUser) throw new UserNotFoundException(id);
     return updatedUser.toJSON() as User;
   }
 
@@ -32,4 +32,3 @@ export class MongooseUserRepository extends UserRepository {
     await UserModel.findOneAndDelete({ id });
   }
 }
-

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Note, NoteRepository } from '@repo/domain';
+import { Note, NoteRepository, NoteNotFoundException } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
 
@@ -11,7 +11,6 @@ export class NoteRepositoryMock extends NoteRepository {
   private generateNotesForSpace(spaceId: string) {
     if (this.generatedSpaceIds.has(spaceId)) return;
 
-    // Генерируем разделы
     const sections: Note[] = Array.from({ length: 2 }).map((_, i) => ({
       id: `section-${spaceId}-${i}`,
       title: faker.lorem.sentence(2).replace('.', ''),
@@ -23,7 +22,6 @@ export class NoteRepositoryMock extends NoteRepository {
       updatedAt: new Date(),
     }));
 
-    // Генерируем заметки в разделах
     const sectionNotes: Note[] = sections.flatMap((section) =>
       Array.from({ length: 2 }).map(() => ({
         id: uuidv7(),
@@ -38,7 +36,6 @@ export class NoteRepositoryMock extends NoteRepository {
       })),
     );
 
-    // Генерируем заметки в корне
     const rootNotes: Note[] = Array.from({ length: 2 }).map(() => ({
       id: uuidv7(),
       title: faker.lorem.sentence(2).replace('.', ''),
@@ -84,7 +81,7 @@ export class NoteRepositoryMock extends NoteRepository {
 
   async update(id: string, note: Partial<Note>): Promise<Note> {
     const index = this.notes.findIndex((n) => n.id === id);
-    if (index === -1) throw new Error('Note not found');
+    if (index === -1) throw new NoteNotFoundException(id);
     const updatedNote = { ...this.notes[index], ...note, id, updatedAt: new Date() } as Note;
     this.notes[index] = updatedNote;
     return updatedNote;
@@ -98,4 +95,3 @@ export class NoteRepositoryMock extends NoteRepository {
     // mock implementation
   }
 }
-

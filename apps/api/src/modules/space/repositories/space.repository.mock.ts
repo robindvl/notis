@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Space, SpaceRepository } from '@repo/domain';
+import { Space, SpaceRepository, SpaceNotFoundException } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
 
@@ -50,7 +50,7 @@ export class SpaceRepositoryMock extends SpaceRepository {
 
   async update(id: string, space: Partial<Space>): Promise<Space> {
     const index = this.spaces.findIndex((s) => s.id === id);
-    if (index === -1) throw new Error('Space not found');
+    if (index === -1) throw new SpaceNotFoundException(id);
     const updatedSpace = { ...this.spaces[index], ...space, id } as Space;
     this.spaces[index] = updatedSpace;
     return updatedSpace;
@@ -60,4 +60,3 @@ export class SpaceRepositoryMock extends SpaceRepository {
     this.spaces = this.spaces.filter((s) => s.id !== id);
   }
 }
-

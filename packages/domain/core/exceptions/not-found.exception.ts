@@ -18,3 +18,20 @@ export class SpaceNotFoundException extends EntityNotFoundException {
   }
 }
 
+export class UserNotFoundException extends EntityNotFoundException {
+  constructor(id: string) {
+    super('User', id);
+  }
+}
+
+export class ProjectNotFoundException extends EntityNotFoundException {
+  constructor(id: string) {
+    super('Project', id);
+  }
+}
+
+export class TaskNotFoundException extends EntityNotFoundException {
+  constructor(id: string) {
+    super('Task', id);
+  }
+}

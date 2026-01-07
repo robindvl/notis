@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserRepository } from '@repo/domain';
+import { User, UserRepository, UserNotFoundException } from '@repo/domain';
 import { uuidv7 } from 'uuidv7';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class UserRepositoryMock extends UserRepository {
 
   async update(id: string, user: Partial<User>): Promise<User> {
     const index = this.users.findIndex((u) => u.id === id);
-    if (index === -1) throw new Error('User not found');
+    if (index === -1) throw new UserNotFoundException(id);
     const updatedUser = { ...this.users[index], ...user, id } as User;
     this.users[index] = updatedUser;
     return updatedUser;
@@ -43,4 +43,3 @@ export class UserRepositoryMock extends UserRepository {
     return this.users;
   }
 }
-
