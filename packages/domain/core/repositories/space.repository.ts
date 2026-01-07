@@ -8,4 +8,5 @@ export abstract class SpaceRepository {
   abstract create(space: SpaceCreateDto): Promise<Space>;
   abstract update(id: string, space: SpaceUpdateDto): Promise<Space>;
   abstract delete(id: string): Promise<void>;
+  abstract deleteAll(): Promise<void>;
 }

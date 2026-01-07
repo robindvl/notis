@@ -51,4 +51,8 @@ export class SpaceRepositoryTypeOrm extends SpaceRepository {
   async delete(id: string): Promise<void> {
     await this.repository.delete(id);
   }
+
+  async deleteAll(): Promise<void> {
+    await this.repository.clear();
+  }
 }

@@ -9,5 +9,6 @@ export abstract class NoteRepository {
   abstract create(note: NoteCreateDto): Promise<Note>;
   abstract update(id: string, data: NoteUpdateDto): Promise<Note>;
   abstract delete(id: string): Promise<void>;
+  abstract deleteAll(): Promise<void>;
   abstract reorder(parentId: string, noteIds: string[]): Promise<void>;
 }

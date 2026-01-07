@@ -1,54 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { Note, NoteCreateDto, NoteRepository, NoteType, NoteUpdateDto, NoteNotFoundException } from '@repo/domain';
+import { Note, NoteCreateDto, NoteRepository, NoteType, NoteUpdateDto, NoteNotFoundException, Space } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
+import { seedNotes } from '../note.seed';
 
 @Injectable()
 export class NoteRepositoryMock extends NoteRepository {
   private notes: Note[] = [];
   private generatedSpaceIds: Set<string> = new Set();
 
-  private generateNotesForSpace(spaceId: string) {
+  private async generateNotesForSpace(spaceId: string) {
     if (this.generatedSpaceIds.has(spaceId)) return;
 
-    const sections: Note[] = Array.from({ length: 2 }).map((_, i) => ({
-      id: `section-${spaceId}-${i}`,
-      title: faker.lorem.sentence(2).replace('.', ''),
-      body: faker.lorem.sentences(2),
-      emoji: i === 0 ? '📚' : '🗄️',
-      type: NoteType.Section,
-      spaceId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }));
-
-    const sectionNotes: Note[] = sections.flatMap((section) =>
-      Array.from({ length: 2 }).map(() => ({
-        id: uuidv7(),
-        title: faker.lorem.sentence(3).replace('.', ''),
-        body: faker.lorem.sentences(3),
-        emoji: faker.helpers.arrayElement(['📝', '📊', '📓', '📗']),
-        type: NoteType.Note,
-        spaceId,
-        sectionId: section.id,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })),
-    );
-
-    const rootNotes: Note[] = Array.from({ length: 2 }).map(() => ({
-      id: uuidv7(),
-      title: faker.lorem.sentence(2).replace('.', ''),
-      body: faker.lorem.sentences(2),
-      emoji: '🌱',
-      type: NoteType.Note,
-      spaceId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }));
-
-    this.notes.push(...sections, ...sectionNotes, ...rootNotes);
     this.generatedSpaceIds.add(spaceId);
+    // Use the same seed logic as the real database
+    await seedNotes(this, { id: spaceId } as Space);
   }
 
   async findById(id: string): Promise<Note | null> {
@@ -56,7 +22,7 @@ export class NoteRepositoryMock extends NoteRepository {
   }
 
   async findBySpaceId(spaceId: string): Promise<Note[]> {
-    this.generateNotesForSpace(spaceId);
+    await this.generateNotesForSpace(spaceId);
     return this.notes.filter((n) => n.spaceId === spaceId);
   }
 
@@ -96,6 +62,10 @@ export class NoteRepositoryMock extends NoteRepository {
 
   async delete(id: string): Promise<void> {
     this.notes = this.notes.filter((n) => n.id !== id);
+  }
+
+  async deleteAll(): Promise<void> {
+    this.notes = [];
   }
 
   async reorder(parentId: string, noteIds: string[]): Promise<void> {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Space, SpaceRepository, SpaceNotFoundException } from '@repo/domain';
+import { Space, SpaceCreateDto, SpaceRepository, SpaceNotFoundException, SpaceUpdateDto } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
 
@@ -38,7 +38,7 @@ export class SpaceRepositoryMock extends SpaceRepository {
     return this.spaces;
   }
 
-  async create(space: Omit<Space, 'id' | 'createdAt'>): Promise<Space> {
+  async create(space: SpaceCreateDto): Promise<Space> {
     const newSpace: Space = {
       ...space,
       id: uuidv7(),
@@ -48,7 +48,7 @@ export class SpaceRepositoryMock extends SpaceRepository {
     return newSpace;
   }
 
-  async update(id: string, space: Partial<Space>): Promise<Space> {
+  async update(id: string, space: SpaceUpdateDto): Promise<Space> {
     const index = this.spaces.findIndex((s) => s.id === id);
     if (index === -1) throw new SpaceNotFoundException(id);
     const updatedSpace = { ...this.spaces[index], ...space, id } as Space;
@@ -58,5 +58,9 @@ export class SpaceRepositoryMock extends SpaceRepository {
 
   async delete(id: string): Promise<void> {
     this.spaces = this.spaces.filter((s) => s.id !== id);
+  }
+
+  async deleteAll(): Promise<void> {
+    this.spaces = [];
   }
 }

@@ -1,17 +1,18 @@
-import { NoteRepository, Space } from '@repo/domain';
+import { Note, NoteRepository, Space, NoteType } from '@repo/domain';
 import { faker } from '@faker-js/faker';
 
 export async function seedNotes(noteRepo: NoteRepository, space: Space) {
   // Create Sections
-  const sections: any[] = [];
+  const sections: Note[] = [];
   const emojis = ['📚', '🗄️', '💡', '🎯', '🛠️'];
   
   for (let i = 0; i < 3; i++) {
     const section = await noteRepo.create({
       title: faker.lorem.words(2),
-      type: 'section',
+      type: NoteType.Section,
       spaceId: space.id,
-      emoji: emojis[i % emojis.length]
+      emoji: emojis[i % emojis.length],
+      content: {}
     });
     sections.push(section);
     console.log(`  Created Section: ${section.title}`);
@@ -23,10 +24,11 @@ export async function seedNotes(noteRepo: NoteRepository, space: Space) {
       const note = await noteRepo.create({
         title: faker.lorem.sentence(3).replace('.', ''),
         body: faker.lorem.paragraphs(1),
-        type: 'note',
+        type: NoteType.Note,
         spaceId: space.id,
         sectionId: section.id,
-        emoji: '📝'
+        emoji: '📝',
+        content: {}
       });
       console.log(`    Created Note: ${note.title}`);
     }
@@ -37,9 +39,10 @@ export async function seedNotes(noteRepo: NoteRepository, space: Space) {
     const note = await noteRepo.create({
       title: faker.lorem.sentence(2).replace('.', ''),
       body: faker.lorem.paragraphs(1),
-      type: 'note',
+      type: NoteType.Note,
       spaceId: space.id,
-      emoji: '🌱'
+      emoji: '🌱',
+      content: {}
     });
     console.log(`  Created Root Note: ${note.title}`);
   }

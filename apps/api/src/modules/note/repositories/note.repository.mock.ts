@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Note, NoteRepository, NoteNotFoundException } from '@repo/domain';
+import { Note, NoteCreateDto, NoteRepository, NoteNotFoundException, NoteUpdateDto } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
 
@@ -68,7 +68,7 @@ export class NoteRepositoryMock extends NoteRepository {
     return this.notes.filter((n) => n.parentId === parentId);
   }
 
-  async create(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note> {
+  async create(note: NoteCreateDto): Promise<Note> {
     const newNote: Note = {
       ...note,
       id: uuidv7(),
@@ -79,7 +79,7 @@ export class NoteRepositoryMock extends NoteRepository {
     return newNote;
   }
 
-  async update(id: string, note: Partial<Note>): Promise<Note> {
+  async update(id: string, note: NoteUpdateDto): Promise<Note> {
     const index = this.notes.findIndex((n) => n.id === id);
     if (index === -1) throw new NoteNotFoundException(id);
     const updatedNote = { ...this.notes[index], ...note, id, updatedAt: new Date() } as Note;
@@ -89,6 +89,10 @@ export class NoteRepositoryMock extends NoteRepository {
 
   async delete(id: string): Promise<void> {
     this.notes = this.notes.filter((n) => n.id !== id);
+  }
+
+  async deleteAll(): Promise<void> {
+    this.notes = [];
   }
 
   async reorder(parentId: string, noteIds: string[]): Promise<void> {

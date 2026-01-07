@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Space, SpaceRepository } from '@repo/domain';
+import { Space, SpaceCreateDto, SpaceRepository, SpaceUpdateDto } from '@repo/domain';
 import { Configuration, SpaceApi } from '../../../@generated/core.api';
 
 @Injectable()
@@ -30,21 +30,25 @@ export class SpaceRepositoryRemote extends SpaceRepository {
     return this.findAll();
   }
 
-  async create(space: Omit<Space, 'id' | 'createdAt'>): Promise<Space> {
+  async create(space: SpaceCreateDto): Promise<Space> {
     return this.coreApi.createSpace({
-      spaceCreate: space,
+      spaceCreate: space as any,
     }) as unknown as Promise<Space>;
   }
 
-  async update(id: string, space: Partial<Space>): Promise<Space> {
+  async update(id: string, space: SpaceUpdateDto): Promise<Space> {
     return this.coreApi.updateSpace({
       id,
-      spaceUpdate: space,
+      spaceUpdate: space as any,
     }) as unknown as Promise<Space>;
   }
 
   async delete(id: string): Promise<void> {
     await this.coreApi.deleteSpace({ id });
+  }
+
+  async deleteAll(): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 }
 

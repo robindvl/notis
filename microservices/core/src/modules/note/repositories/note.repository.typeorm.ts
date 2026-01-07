@@ -57,6 +57,10 @@ export class NoteRepositoryTypeOrm extends NoteRepository {
     await this.repository.delete(id);
   }
 
+  async deleteAll(): Promise<void> {
+    await this.repository.clear();
+  }
+
   async reorder(parentId: string, noteIds: string[]): Promise<void> {
     // Basic implementation for reorder if needed
   }

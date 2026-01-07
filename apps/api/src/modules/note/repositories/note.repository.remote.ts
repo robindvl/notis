@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Note, NoteRepository } from '@repo/domain';
+import { Note, NoteCreateDto, NoteRepository, NoteUpdateDto } from '@repo/domain';
 import { Configuration, NoteApi } from '../../../@generated/core.api';
 
 @Injectable()
@@ -38,14 +38,14 @@ export class NoteRepositoryRemote extends NoteRepository {
     return data.map((n: any) => this.mapToNote(n));
   }
 
-  async create(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note> {
+  async create(note: NoteCreateDto): Promise<Note> {
     const data = await this.coreApi.createNote({
       noteCreate: note as any,
     });
     return this.mapToNote(data);
   }
 
-  async update(id: string, note: Partial<Note>): Promise<Note> {
+  async update(id: string, note: NoteUpdateDto): Promise<Note> {
     const data = await this.coreApi.updateNote({
       id,
       noteUpdate: note as any,
@@ -55,6 +55,10 @@ export class NoteRepositoryRemote extends NoteRepository {
 
   async delete(id: string): Promise<void> {
     await this.coreApi.deleteNote({ id });
+  }
+
+  async deleteAll(): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 
   async reorder(parentId: string, noteIds: string[]): Promise<void> {

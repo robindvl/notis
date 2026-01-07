@@ -2,39 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { Space, SpaceCreateDto, SpaceRepository, SpaceUpdateDto, SpaceNotFoundException } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
+import { seedSpaces } from '../space.seed';
 
 @Injectable()
 export class SpaceRepositoryMock extends SpaceRepository {
-  private spaces: Space[] = [
-    {
-      id: uuidv7(),
-      name: faker.book.format(),
-      img: faker.image.avatar(),
-      createdAt: new Date(),
-    },
-    {
-      id: uuidv7(),
-      name: faker.book.format(),
-      img: faker.image.avatar(),
-      createdAt: new Date(),
-    },
-    {
-      id: uuidv7(),
-      name: faker.book.format(),
-      img: faker.image.avatar(),
-      createdAt: new Date(),
-    },
-  ];
+  private spaces: Space[] = [];
+  private initialized = false;
+
+  private async initialize() {
+    if (this.initialized) return;
+    this.initialized = true;
+    await seedSpaces(this);
+  }
 
   async findById(id: string): Promise<Space | null> {
+    await this.initialize();
     return this.spaces.find((s) => s.id === id) || null;
   }
 
   async findByOwnerId(ownerId: string): Promise<Space[]> {
+    await this.initialize();
     return this.spaces;
   }
 
   async findAll(): Promise<Space[]> {
+    await this.initialize();
     return this.spaces;
   }
 
@@ -64,5 +56,9 @@ export class SpaceRepositoryMock extends SpaceRepository {
 
   async delete(id: string): Promise<void> {
     this.spaces = this.spaces.filter((s) => s.id !== id);
+  }
+
+  async deleteAll(): Promise<void> {
+    this.spaces = [];
   }
 }
