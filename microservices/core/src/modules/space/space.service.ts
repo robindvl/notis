@@ -1,15 +1,26 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { SpaceApi } from '../../@generated/api';
 import { Space as SpaceModel, SpaceCreate, SpaceUpdate } from '../../@generated/models';
-import { SpaceRepository } from '@repo/domain';
+import { SpaceCreateDto, SpaceUpdateDto } from '@repo/domain';
 import { SpaceResponseDto } from './space.dto';
+import { CreateSpaceUseCase } from './use-cases/create-space.use-case';
+import { UpdateSpaceUseCase } from './use-cases/update-space.use-case';
+import { GetSpaceUseCase } from './use-cases/get-space.use-case';
+import { DeleteSpaceUseCase } from './use-cases/delete-space.use-case';
+import { GetSpacesUseCase } from './use-cases/get-spaces.use-case';
 
 @Injectable()
 export class SpaceService implements SpaceApi {
-  constructor(private readonly repository: SpaceRepository) {}
+  constructor(
+    private readonly createSpaceUseCase: CreateSpaceUseCase,
+    private readonly updateSpaceUseCase: UpdateSpaceUseCase,
+    private readonly getSpaceUseCase: GetSpaceUseCase,
+    private readonly deleteSpaceUseCase: DeleteSpaceUseCase,
+    private readonly getSpacesUseCase: GetSpacesUseCase,
+  ) {}
 
   async getSpaces(_request: Request): Promise<SpaceModel[]> {
-    const spaces = await this.repository.findAll();
+    const spaces = await this.getSpacesUseCase.execute();
     return SpaceResponseDto.fromDomainArray(spaces);
   }
 
@@ -17,15 +28,12 @@ export class SpaceService implements SpaceApi {
     spaceCreate: SpaceCreate,
     _request: Request,
   ): Promise<SpaceModel> {
-    const space = await this.repository.create(spaceCreate);
+    const space = await this.createSpaceUseCase.execute(spaceCreate as SpaceCreateDto);
     return SpaceResponseDto.fromDomain(space);
   }
 
   async getSpace(id: string, _request: Request): Promise<SpaceModel> {
-    const space = await this.repository.findById(id);
-    if (!space) {
-      throw new NotFoundException(`Space with ID ${id} not found`);
-    }
+    const space = await this.getSpaceUseCase.execute(id);
     return SpaceResponseDto.fromDomain(space);
   }
 
@@ -34,11 +42,11 @@ export class SpaceService implements SpaceApi {
     spaceUpdate: SpaceUpdate,
     _request: Request,
   ): Promise<SpaceModel> {
-    const space = await this.repository.update(id, spaceUpdate);
+    const space = await this.updateSpaceUseCase.execute(id, spaceUpdate as SpaceUpdateDto);
     return SpaceResponseDto.fromDomain(space);
   }
 
   async deleteSpace(id: string, _request: Request): Promise<void> {
-    await this.repository.delete(id);
+    await this.deleteSpaceUseCase.execute(id);
   }
 }
