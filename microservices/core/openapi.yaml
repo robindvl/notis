@@ -49,6 +49,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
         description: Уникальный идентификатор пространства
     get:
       tags:
@@ -100,18 +101,21 @@ paths:
           required: false
           schema:
             type: string
+            format: uuid
           description: ID пространства
         - in: query
           name: sectionId
           required: false
           schema:
             type: string
+            format: uuid
           description: ID раздела
         - in: query
           name: parentId
           required: false
           schema:
             type: string
+            format: uuid
           description: ID родителя
       responses:
         '200':
@@ -145,6 +149,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
         description: Уникальный идентификатор заметки
     get:
       tags:
@@ -197,6 +202,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         name:
           type: string
         img:
@@ -233,6 +239,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         title:
           type: string
         body:
@@ -244,10 +251,13 @@ components:
           enum: [note, section, paragraph, note_task]
         parentId:
           type: string
+          format: uuid
         sectionId:
           type: string
+          format: uuid
         spaceId:
           type: string
+          format: uuid
         content:
           type: object
         createdAt:
@@ -272,10 +282,13 @@ components:
           enum: [note, section, paragraph, note_task]
         parentId:
           type: string
+          format: uuid
         sectionId:
           type: string
+          format: uuid
         spaceId:
           type: string
+          format: uuid
         content:
           type: object
 

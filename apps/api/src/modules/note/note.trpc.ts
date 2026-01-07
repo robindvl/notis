@@ -6,8 +6,13 @@ import { BaseRouter } from '../../common/base-router';
 import { NoteService } from './note.service';
 import { Note, AttrMetaDto, IdDto } from '@repo/domain';
 
-const validateList = typia.createAssert<{ spaceId: string } & AttrMetaDto<Note>>();
-const validateShow = typia.createAssert<IdDto & AttrMetaDto<Note>>();
+/**
+ * @format uuid
+ */
+type UUID = string;
+
+const validateList = typia.createAssert<{ spaceId: UUID } & AttrMetaDto<Note>>();
+const validateShow = typia.createAssert<{ id: UUID } & AttrMetaDto<Note>>();
 
 @Injectable()
 export class NoteTrpcRouter extends BaseRouter {

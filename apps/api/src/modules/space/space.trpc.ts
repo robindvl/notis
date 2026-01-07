@@ -6,7 +6,12 @@ import { BaseRouter } from '../../common/base-router';
 import { SpaceService } from './space.service';
 import { IdDto } from '@repo/domain';
 
-const validateShow = typia.createAssert<IdDto>();
+/**
+ * @format uuid
+ */
+type UUID = string;
+
+const validateShow = typia.createAssert<{ id: UUID }>();
 
 @Injectable()
 export class SpaceTrpcRouter extends BaseRouter {

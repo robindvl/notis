@@ -12,10 +12,15 @@ import {
 } from '@repo/domain';
 import { TaskService } from './task.service';
 
-const validateList = typia.createAssert<{ projectId: string } & AttrMetaDto<Task>>();
-const validateShow = typia.createAssert<IdDto & AttrMetaDto<Task>>();
+/**
+ * @format uuid
+ */
+type UUID = string;
+
+const validateList = typia.createAssert<{ projectId: UUID } & AttrMetaDto<Task>>();
+const validateShow = typia.createAssert<{ id: UUID } & AttrMetaDto<Task>>();
 const validateCreate = typia.createAssert<CreateTaskDto>();
-const validateUpdate = typia.createAssert<IdDto & UpdateTaskDto>();
+const validateUpdate = typia.createAssert<{ id: UUID } & UpdateTaskDto>();
 
 @Injectable()
 export class TaskTrpcRouter extends BaseRouter {

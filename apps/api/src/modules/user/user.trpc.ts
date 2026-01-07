@@ -6,9 +6,14 @@ import { TrpcService } from '../../processors/trpc/trpc.service';
 import { BaseRouter } from '../../common/base-router';
 import { UserService } from './user.service';
 
+/**
+ * @format uuid
+ */
+type UUID = string;
+
 const UserCreateSchema = typia.createAssert<CreateUserDto>();
 const validateMeta = typia.createAssert<PaginationDto>();
-const validateShow = typia.createAssert<IdDto>();
+const validateShow = typia.createAssert<{ id: UUID }>();
 
 @Injectable()
 export class UserTrpcRouter extends BaseRouter {

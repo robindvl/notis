@@ -1,5 +1,3 @@
-import { AppSidebar } from "@/components/app-sidebar"
-
 export default function SpacesLayout({
   children,
 }: {
@@ -7,7 +5,6 @@ export default function SpacesLayout({
 }) {
   return (
     <div className="flex h-svh overflow-hidden w-full">
-      <AppSidebar />
       {children}
     </div>
   )

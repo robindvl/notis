@@ -1,7 +1,7 @@
 import { Command } from "lucide-react"
 import { SpaceSelect } from "@/components/space-select"
 
-export default function RootPage() {
+export default function SpacesPage() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10 w-full">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -16,3 +16,4 @@ export default function RootPage() {
     </div>
   )
 }
+

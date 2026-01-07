@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useQuery } from "@tanstack/react-query"
 
 import { NavUser } from "@/components/nav-user"
+import { SpaceSwitcher } from "@/components/space-switcher"
 import { trpc } from "@/shared/api/trpc"
 import {
   Sidebar,
@@ -59,19 +60,6 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       className="!w-[calc(var(--sidebar-width-icon)_+_1px)] border-r"
       {...props}
     >
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-              <Link href={`/spaces/${id}`}>
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Command className="size-4" />
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent className="px-1.5 md:px-0">

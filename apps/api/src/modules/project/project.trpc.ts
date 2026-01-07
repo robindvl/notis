@@ -12,10 +12,15 @@ import {
 } from '@repo/domain';
 import { ProjectService } from './project.service';
 
-const validateList = typia.createAssert<{ spaceId: string } & AttrMetaDto<Project>>();
-const validateShow = typia.createAssert<IdDto & AttrMetaDto<Project>>();
+/**
+ * @format uuid
+ */
+type UUID = string;
+
+const validateList = typia.createAssert<{ spaceId: UUID } & AttrMetaDto<Project>>();
+const validateShow = typia.createAssert<{ id: UUID } & AttrMetaDto<Project>>();
 const validateCreate = typia.createAssert<CreateProjectDto>();
-const validateUpdate = typia.createAssert<IdDto & UpdateProjectDto>();
+const validateUpdate = typia.createAssert<{ id: UUID } & UpdateProjectDto>();
 
 @Injectable()
 export class ProjectTrpcRouter extends BaseRouter {

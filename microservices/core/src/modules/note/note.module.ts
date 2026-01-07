@@ -1,14 +1,17 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { NoteRepository } from '@repo/domain';
-import { NoteRepositoryMock } from './repositories/note.repository.mock';
+import { NoteRepositoryTypeOrm } from './repositories/note.repository.typeorm';
 import { NoteService } from './note.service';
+import { NoteEntity } from './entities/note.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([NoteEntity])],
   providers: [
     NoteService,
     {
       provide: NoteRepository,
-      useClass: NoteRepositoryMock,
+      useClass: NoteRepositoryTypeOrm,
     },
   ],
   exports: [NoteService, NoteRepository],
