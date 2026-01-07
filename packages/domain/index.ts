@@ -15,6 +15,8 @@ export * from './core/dto/common.dto';
 export * from './core/dto/note.dto';
 export * from './core/dto/space.dto';
 export * from './core/types/query.types';
+export * from './core/exceptions/base.exception';
+export * from './core/exceptions/not-found.exception';
 
 export * from './core/repositories/space.repository';
 export * from './core/repositories/note.repository';

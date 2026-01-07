@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Note, NoteCreateDto, NoteRepository, NoteType, NoteUpdateDto } from '@repo/domain';
+import { Note, NoteCreateDto, NoteRepository, NoteType, NoteUpdateDto, NoteNotFoundException } from '@repo/domain';
 import { faker } from '@faker-js/faker/locale/ru';
 import { uuidv7 } from 'uuidv7';
 
@@ -81,7 +81,7 @@ export class NoteRepositoryMock extends NoteRepository {
 
   async update(id: string, data: NoteUpdateDto): Promise<Note> {
     const index = this.notes.findIndex((n) => n.id === id);
-    if (index === -1) throw new Error('Note not found');
+    if (index === -1) throw new NoteNotFoundException(id);
 
     const updatedNote: Note = {
       ...this.notes[index],

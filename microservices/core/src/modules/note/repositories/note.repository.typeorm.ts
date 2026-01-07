@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Note, NoteCreateDto, NoteRepository, NoteUpdateDto } from '@repo/domain';
+import { Note, NoteCreateDto, NoteRepository, NoteUpdateDto, NoteNotFoundException } from '@repo/domain';
 import { NoteEntity } from '../entities/note.entity';
 import { uuidv7 } from 'uuidv7';
 
@@ -42,7 +42,7 @@ export class NoteRepositoryTypeOrm extends NoteRepository {
   async update(id: string, data: NoteUpdateDto): Promise<Note> {
     const note = await this.findById(id);
     
-    if (!note) throw new Error('Note not found');
+    if (!note) throw new NoteNotFoundException(id);
 
     const updatedNote = this.repository.create({
       ...note,

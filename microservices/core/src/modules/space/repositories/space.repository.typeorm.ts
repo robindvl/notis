@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Space, SpaceCreateDto, SpaceRepository, SpaceUpdateDto } from '@repo/domain';
+import { Space, SpaceCreateDto, SpaceRepository, SpaceUpdateDto, SpaceNotFoundException } from '@repo/domain';
 import { SpaceEntity } from '../entities/space.entity';
 import { uuidv7 } from 'uuidv7';
 
@@ -37,7 +37,7 @@ export class SpaceRepositoryTypeOrm extends SpaceRepository {
 
   async update(id: string, data: SpaceUpdateDto): Promise<Space> {
     const space = await this.findById(id);
-    if (!space) throw new Error('Space not found');
+    if (!space) throw new SpaceNotFoundException(id);
 
     const updatedSpace = this.repository.create({
       ...space,
