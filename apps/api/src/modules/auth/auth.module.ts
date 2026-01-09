@@ -4,6 +4,8 @@ import { AuthRepository } from '@repo/domain';
 import { AuthService } from './auth.service';
 import { AuthTrpcRouter } from './auth.trpc';
 import { AuthRepositoryRemote } from './repositories/auth.repository.remote';
+import { AuthRepositoryMock } from './repositories/auth.repository.mock';
+import { getRepositoryImplementation } from '../../common/repository-factory';
 
 @Global()
 @Module({
@@ -12,7 +14,7 @@ import { AuthRepositoryRemote } from './repositories/auth.repository.remote';
     AuthTrpcRouter,
     {
       provide: AuthRepository,
-      useClass: AuthRepositoryRemote,
+      useClass: getRepositoryImplementation<AuthRepository>(AuthRepositoryRemote, AuthRepositoryMock),
     },
   ],
   exports: [AuthService, AuthTrpcRouter, AuthRepository],
