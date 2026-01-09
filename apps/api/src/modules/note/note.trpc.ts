@@ -13,6 +13,7 @@ type UUID = string;
 
 const validateList = typia.createAssert<{ spaceId: UUID } & AttrMetaDto<Note>>();
 const validateShow = typia.createAssert<{ id: UUID } & AttrMetaDto<Note>>();
+const validateUpdate = typia.createAssert<{ id: UUID; data: { title?: string; body?: string } } & AttrMetaDto<Note>>();
 
 @Injectable()
 export class NoteTrpcRouter extends BaseRouter {
@@ -28,8 +29,17 @@ export class NoteTrpcRouter extends BaseRouter {
       notes: this.trpcService.router({
         list: this.list(),
         show: this.show(),
+        update: this.update(),
       }),
     };
+  }
+
+  update() {
+    return this.trpcService.protectedProcedure
+      .input(validateUpdate)
+      .mutation(async ({ input: { id, data } }) => {
+        return this.noteService.updateNote(id, data);
+      });
   }
 
   show() {
