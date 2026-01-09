@@ -1,3 +1,4 @@
+// components/notes-tree.tsx
 "use client"
 
 import * as React from "react"
@@ -16,6 +17,7 @@ import {
 import { Note } from "@repo/domain"
 import Link from "next/link"
 import { useParams } from "next/navigation"
+import { ButtonCreateNote } from "./button-create-note/button-create-note"
 
 export type TreeItem = {
   id: string
@@ -31,7 +33,7 @@ interface NotesTreeProps {
 
 export function NotesTree({ notes }: NotesTreeProps) {
   const params = useParams()
-  
+
   const tree = React.useMemo(() => {
     const itemMap = new Map<string, TreeItem>()
     const topLevel: TreeItem[] = []
@@ -51,7 +53,7 @@ export function NotesTree({ notes }: NotesTreeProps) {
     // 2. Build hierarchy
     notes.forEach(note => {
       const item = itemMap.get(note.id)!
-      
+
       if (note.parentId && itemMap.has(note.parentId)) {
         itemMap.get(note.parentId)!.children.push(item)
       } else if (note.sectionId && itemMap.has(note.sectionId)) {
@@ -66,11 +68,11 @@ export function NotesTree({ notes }: NotesTreeProps) {
   }, [notes])
 
   return (
-    <SidebarMenu>
-      {tree.map((item) => (
-        <Tree key={item.id} item={item} spaceId={params?.id as string} />
-      ))}
-    </SidebarMenu>
+      <SidebarMenu>
+        {tree.map((item) => (
+            <Tree key={item.id} item={item} spaceId={params?.id as string} />
+        ))}
+      </SidebarMenu>
   )
 }
 
@@ -82,41 +84,51 @@ function Tree({ item, spaceId }: { item: TreeItem; spaceId: string }) {
 
   if (!hasChildren && item.type === 'note') {
     return (
-      <SidebarMenuItem>
-        <SidebarMenuButton asChild isActive={isActive}>
-          <Link href={`/spaces/${spaceId}/notes/${item.id}`}>
-            <div className="flex items-center gap-2 min-w-0">
-              {item.emoji ? <span className="shrink-0">{item.emoji}</span> : <File className="size-4 shrink-0" />}
-              <span className="truncate max-w-[180px]">{item.title}</span>
-            </div>
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild isActive={isActive}>
+            <Link href={`/spaces/${spaceId}/notes/${item.id}`}>
+              <div className="flex items-center gap-2 min-w-0">
+                {item.emoji ? <span className="shrink-0">{item.emoji}</span> : <File className="size-4 shrink-0" />}
+                <span className="truncate max-w-[180px]">{item.title}</span>
+              </div>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
     )
   }
 
   return (
-    <SidebarMenuItem>
-      <Collapsible
-        className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
-        defaultOpen={item.type === 'section' || item.children.some(child => child.id === currentNoteId)}
-      >
-        <CollapsibleTrigger asChild>
-          <SidebarMenuButton isActive={isActive}>
-            <ChevronRight className="transition-transform size-4 shrink-0" />
-            {item.type === 'section' ? <Folder className="size-4 shrink-0" /> : (item.emoji ? <span className="shrink-0">{item.emoji}</span> : <File className="size-4 shrink-0" />)}
-            <span className="truncate max-w-[180px]">{item.title}</span>
-          </SidebarMenuButton>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <SidebarMenuSub>
-            {item.children.map((subItem) => (
-              <Tree key={subItem.id} item={subItem} spaceId={spaceId} />
-            ))}
-          </SidebarMenuSub>
-        </CollapsibleContent>
-      </Collapsible>
-    </SidebarMenuItem>
+      <SidebarMenuItem>
+        <Collapsible
+            className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
+            defaultOpen={item.type === 'section' || item.children.some(child => child.id === currentNoteId)}
+        >
+          <div className="flex items-center justify-between">
+            <CollapsibleTrigger asChild className="flex-1">
+              <SidebarMenuButton isActive={isActive} className="flex-1">
+                <ChevronRight className="transition-transform size-4 shrink-0" />
+                {item.type === 'section' ? <Folder className="size-4 shrink-0" /> : (item.emoji ? <span className="shrink-0">{item.emoji}</span> : <File className="size-4 shrink-0" />)}
+                <span className="truncate max-w-[150px] flex-1 text-left">{item.title}</span>
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+
+            {/* Кнопка создания внутри секции */}
+            {item.type === 'section' && (
+                <ButtonCreateNote
+                    sectionId={item.id}
+                    className="mr-2"
+                />
+            )}
+          </div>
+
+          <CollapsibleContent>
+            <SidebarMenuSub>
+              {item.children.map((subItem) => (
+                  <Tree key={subItem.id} item={subItem} spaceId={spaceId} />
+              ))}
+            </SidebarMenuSub>
+          </CollapsibleContent>
+        </Collapsible>
+      </SidebarMenuItem>
   )
 }
-
