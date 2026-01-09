@@ -31,4 +31,3 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
     });
   }
 }
-
